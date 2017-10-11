@@ -13,6 +13,6 @@ class Signal extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Bondacom\antenna\Signal';
+        return 'Signal';
     }
 }

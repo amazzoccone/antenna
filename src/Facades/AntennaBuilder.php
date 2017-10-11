@@ -4,6 +4,11 @@ namespace Bondacom\antenna\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * Class AntennaBuilder
+ * @see \Bondacom\antenna\AntennaBuilder
+ *
+ */
 class AntennaBuilder extends Facade
 {
     /**
@@ -13,6 +18,6 @@ class AntennaBuilder extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Bondacom\antenna\AntennaBuilder';
+        return 'AntennaBuilder';
     }
 }
