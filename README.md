@@ -9,12 +9,12 @@ Antenna provides two basic helpers: **Constructor** and **Signal**.
 
 Antenna have two core features:
 ### AntennaBuilder
-**AntennaBuilder** provides tools required to create or update you OneSignal APPs.
+**AntennaBuilder** provides tools required to create your OneSignal APPs.
 
 Require a [User Auth Key](https://documentation.onesignal.com/docs/accounts-and-keys#section-user-auth-key)
 
 ### Signal
-**Signal** helps you to manage notifications, devices, sessions, purchased, etc. 
+**SignalApp** helps you to update your app, and manage notifications, devices, sessions, purchased, etc. 
 
 Require a [App's REST API Key](https://documentation.onesignal.com/docs/accounts-and-keys#section-keys-ids)
 
