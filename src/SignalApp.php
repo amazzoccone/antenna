@@ -19,6 +19,7 @@ class Signal
      */
     public function __construct($appID, $appKey)
     {
-        $this->oneSignalConsumer = new OneSignalConsumer($appID,$appKey);
+        $this->oneSignalConsumer = app('OneSignalConsumer');
+        $this->oneSignalConsumer->setApp($appID, $appKey);
     }
 }

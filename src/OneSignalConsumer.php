@@ -2,6 +2,9 @@
 
 namespace Bondacom\antenna;
 
+use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
+use GuzzleHttp\Client;
+
 class OneSignalConsumer
 {
 
@@ -40,11 +43,20 @@ class OneSignalConsumer
     protected $appKey = false;
 
     /**
-     * OneSignalConsumer constructor.
+     * Guzzle Client
+     *
+     * @var Client
      */
-    function __construct()
-    {
+    protected $guzzleClient;
 
+    /**
+     * OneSignalConsumer constructor.
+     *
+     * @param Client $guzzleClient
+     */
+    function __construct(Client $guzzleClient)
+    {
+        $this->guzzleClient = $guzzleClient;
     }
 
     /**
@@ -74,4 +86,43 @@ class OneSignalConsumer
         $this->appKey = $appKey;
         return $this;
     }
+
+    public function createApp()
+    {
+        $fields = [
+            'name',
+            'apns_env',
+            'apns_p12',
+            'apns_p12_password',
+            'gcm_key',
+            'android_gcm_sender_id',
+            'chrome_web_origin',
+            'chrome_web_default_notification_icon',
+            'chrome_web_sub_domain',
+            'safari_apns_p12',
+            'safari_apns_p12_password',
+            'site_name',
+            'safari_site_origin',
+            'safari_icon_256_256',
+            'chrome_key'
+        ];
+        $this->assertHasUserKey();
+
+    }
+
+    /**
+     * Check if User Key is set.
+     *
+     * If there is not a user key this method will throw an exception.
+     *
+     * @throws MissingUserKeyRequired
+     */
+    public function assertHasUserKey()
+    {
+        if(!$this->userKey)
+        {
+            throw new MissingUserKeyRequired();
+        }
+    }
+
 }
