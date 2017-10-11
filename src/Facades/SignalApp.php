@@ -4,7 +4,7 @@ namespace Bondacom\antenna\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Signal extends Facade
+class SignalApp extends Facade
 {
     /**
      * Get the registered name of the component.

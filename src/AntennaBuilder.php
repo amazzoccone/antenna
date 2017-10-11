@@ -21,4 +21,12 @@ class AntennaBuilder
         $this->oneSignalConsumer = app('OneSignalConsumer');
         $this->oneSignalConsumer->setUserKey($userKey);
     }
+
+    /**
+     * @return SignalApp
+     */
+    public function create()
+    {
+
+    }
 }
