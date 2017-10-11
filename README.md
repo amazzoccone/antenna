@@ -49,6 +49,16 @@ Register the service provider in `config/app.php`
     ]
 ```
 
+Add Aliases in your `config/app.php`
+
+```
+    'aliases' => [
+        ...
+        'AntennaBuilder' => Bondacom\antenna\Facades\AntennaBuilder::class,
+        'Signal' => Bondacom\antenna\Facades\Signal::class,
+    ]
+```
+
 # Usage
 
 ### AntennaBuilder
