@@ -5,9 +5,11 @@ namespace Bondacom\antenna;
 class AntennaBuilder
 {
     /**
-     * @var string
+     * OneSignal Client
+     *
+     * @var OneSignalConsumer
      */
-    protected $userKey;
+    protected $oneSignalConsumer;
 
     /**
      * antennaClass constructor.
@@ -16,6 +18,7 @@ class AntennaBuilder
      */
     public function __construct($userKey)
     {
-        $this->userKey = $userKey;
+        $this->oneSignalConsumer = app('OneSignalConsumer');
+        $this->oneSignalConsumer->setUserKey($userKey);
     }
 }

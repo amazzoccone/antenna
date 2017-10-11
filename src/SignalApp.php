@@ -2,7 +2,7 @@
 
 namespace Bondacom\antenna;
 
-class Signal
+class SignalApp
 {
     /**
      * OneSignal Client

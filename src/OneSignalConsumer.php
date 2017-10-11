@@ -125,4 +125,18 @@ class OneSignalConsumer
         }
     }
 
+    /**
+     * Check if there is any app loaded
+     *
+     * If there is not a user key this method will throw an exception.
+     *
+     * @throws MissingUserKeyRequired
+     */
+    public function assertHasAppLoaded()
+    {
+        if(!$this->appId || !$this->appKey)
+        {
+            throw new MissingUserKeyRequired();
+        }
+    }
 }

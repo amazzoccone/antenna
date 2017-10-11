@@ -3,7 +3,7 @@
 namespace Bondacom\antenna\Providers;
 
 use Bondacom\antenna\AntennaBuilder;
-use Bondacom\antenna\Signal;
+use Bondacom\antenna\SignalApp;
 use Illuminate\Support\ServiceProvider;
 
 class AntennaServiceProvider extends ServiceProvider
@@ -33,9 +33,9 @@ class AntennaServiceProvider extends ServiceProvider
             return new AntennaBuilder($config['userKey']);
         });
 
-        $this->app->singleton('Signal', function ($app) use ($config) {
+        $this->app->singleton('SignalApp', function ($app) use ($config) {
             $app = $config['apps'][$config['default_app']];
-            return new Signal($app['id'], $app['key']);
+            return new SignalApp($app['id'], $app['key']);
         });
 
     }
