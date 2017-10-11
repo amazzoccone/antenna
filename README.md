@@ -38,6 +38,8 @@ Add this to your project's `composer.json` file
 
 Then execute `composer require Bondacom/antenna=~1.0` command.
 
+***If you are using Laravel 5.5+ edit you config/app.php file will not be required! Composer.json will load it automatically***
+
 Register the service provider in `config/app.php`
 
 ```
@@ -58,6 +60,11 @@ Add Aliases in your `config/app.php`
         'Signal' => Bondacom\antenna\Facades\Signal::class,
     ]
 ```
+
+Then publish the config file with `php artisan vendor:publish --tag=config`. 
+
+This will add the file app/config/antenna.php. This config have a default app, and will get the OneSignal data from your .env file. Anyway, you can check it in order to add others apps, for example.
+
 
 # Usage
 

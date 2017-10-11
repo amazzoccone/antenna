@@ -16,8 +16,8 @@ class AntennaServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/antenna_settings.php' => config_path('antenna_settings.php'),
-        ]);
+            __DIR__ . '/../config/antenna.php' => config_path('antenna.php'),
+        ], 'config');
     }
 
     /**
@@ -27,15 +27,16 @@ class AntennaServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $config = config('antenna_settings');
+        $config = config('antenna');
 
-        $this->app->singleton('Bondacom\antenna\AntennaBuilder', function ($app) use ($config){
+        $this->app->singleton('AntennaBuilder', function ($app) use ($config) {
             return new AntennaBuilder($config['userKey']);
         });
 
-        $this->app->singleton('Bondacom\antenna\Signal', function ($app) use ($config){
+        $this->app->singleton('Signal', function ($app) use ($config) {
             $app = $config['apps'][$config['default_app']];
-            return new Signal($app['id'],$app['key']);
+            return new Signal($app['id'], $app['key']);
         });
+
     }
 }

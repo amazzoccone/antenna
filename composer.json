@@ -24,6 +24,15 @@
       "Bondacom\\antenna\\" : "src/"
     }
   }
-
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Bondacom\\antenna\\Providers\\AntennaServiceProvider"
+      ],
+      "aliases": {
+        "Debugbar": "Barryvdh\\Debugbar\\Facade"
+      }
+    }
+  },
 
 }
