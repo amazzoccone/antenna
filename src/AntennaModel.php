@@ -117,7 +117,10 @@ class AntennaModel
     }
 
     /**
-     * If you have all the infroation for any reason, and don't need go to OneSignal server, then, you can use it.
+     * If you have all the information for any reason, and don't need go to OneSignal server, then, you can use it.
+     *
+     * WARNING: CALL IT JUST IF YOU ARE SURE THAT YOU HAVE THE MOST RESENT INFORMATION (FOR EXAMPLE, AFTER CREATION)
+     *
      * @param $data
      * @return $this
      */
