@@ -120,7 +120,9 @@ class AntennaModel
      */
     private function load()
     {
-        $this->loadFromMetadata($this->oneSignalConsumer->getApp());
+        $method = 'get'.$this->oneSignalObject;
+
+        $this->loadFromMetadata($this->oneSignalConsumer->$method());
         $this->isLoad = true;
     }
 
@@ -130,8 +132,16 @@ class AntennaModel
      */
     public function save()
     {
-        // TODO
+        if (!$this->isDirty) {
+            return $this;
+        }
+
+        $method = ($this->attributes['id'] ? 'update' : 'create').$this->oneSignalObject;
+        $result =  $this->oneSignalConsumer->{$method}($this->attributes);
+
+        $this->loadFromMetadata($result);
         $this->isDirty = false;
+        return $this;
     }
 
     /**

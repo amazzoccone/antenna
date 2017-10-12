@@ -189,6 +189,20 @@ class OneSignalConsumer
         return $this->get('apps/'.$this->appId);
     }
 
+    /**
+     * Creates a new OneSignal APP.
+     *
+     * @param array $data Data APP
+     *
+     * @return Object
+     */
+    public function updateApp($data)
+    {
+        $this->assetHasAppData();
+        $this->addUserKey();
+        return $this->put('apps/'.$this->appId, $data);
+    }
+
 //**********************************
 //          INTERAL FUNCTIONS
 //**********************************
@@ -288,13 +302,23 @@ class OneSignalConsumer
         $this->headers['Content-Type'] = 'application/json';
         $this->headers['json'] = $data;
 
-        try {
-            $request = $this->guzzleClient->post(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
-                $this->headers);
-            return $this->processResponse($request);
-        } catch (RequestException $e) {
-            return $this->processResponse($e->getResponse());
-        }
+        return $this->makeRequest($endpoint,'post');
+    }
+
+    /**
+     * Make a PUT request.
+     *
+     * @param $endpoint
+     * @param $data
+     *
+     * @return object
+     */
+    public function put($endpoint, $data)
+    {
+        $this->headers['Content-Type'] = 'application/json';
+        $this->headers['json'] = $data;
+
+        return $this->makeRequest($endpoint,'put');
     }
 
     /**
@@ -306,8 +330,21 @@ class OneSignalConsumer
      */
     public function get($endpoint)
     {
+        return $this->makeRequest($endpoint,'get');
+    }
+
+    /**
+     * Make a HTTP request and parse response
+     *
+     * @param $endpoint
+     * @param $method
+     *
+     * @return object
+     */
+    private function makeRequest($endpoint,$method)
+    {
         try {
-            $request = $this->guzzleClient->get(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
+            $request = $this->guzzleClient->{$method}(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
                 $this->headers);
             return $this->processResponse($request);
         } catch (RequestException $e) {

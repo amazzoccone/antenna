@@ -9,7 +9,7 @@ class SignalApp extends AntennaModel
      *
      * @var string
      */
-    protected $oneSignalObject = 'apps';
+    protected $oneSignalObject = 'App';
 
     /**
      * Signal constructor.
