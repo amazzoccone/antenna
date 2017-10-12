@@ -51,6 +51,10 @@ class AntennaModel
      */
     public function setUserKey($key)
     {
+        if (!$key) {
+            return $this;
+        }
+        
         $this->oneSignalConsumer->setUserKey($key);
         return $this;
     }
@@ -120,7 +124,7 @@ class AntennaModel
      */
     private function load()
     {
-        $method = 'get'.$this->oneSignalObject;
+        $method = 'get' . $this->oneSignalObject;
 
         $this->loadFromMetadata($this->oneSignalConsumer->$method());
         $this->isLoad = true;
@@ -136,8 +140,8 @@ class AntennaModel
             return $this;
         }
 
-        $method = ($this->attributes['id'] ? 'update' : 'create').$this->oneSignalObject;
-        $result =  $this->oneSignalConsumer->{$method}($this->attributes);
+        $method = ($this->attributes['id'] ? 'update' : 'create') . $this->oneSignalObject;
+        $result = $this->oneSignalConsumer->{$method}($this->attributes);
 
         $this->loadFromMetadata($result);
         $this->isDirty = false;

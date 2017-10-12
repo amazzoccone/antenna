@@ -2,6 +2,9 @@
 
 namespace Bondacom\antenna;
 
+use Bondacom\antenna\Exceptions\MissingOneSignalAppConfiguration;
+use Bondacom\antenna\Exceptions\MissingOneSignalAppInformation;
+
 class SignalApp extends AntennaModel
 {
     /**
@@ -30,8 +33,33 @@ class SignalApp extends AntennaModel
         $this->loadFromMetadata($metaData);
     }
 
-    public function show()
+    public function get($what = false)
     {
-        return $this;
+        if (!$what) {
+            return $this;
+        }
+
+        $config = config('antenna');
+
+        if (is_array($what)) {
+            if (!isset($what['id']) OR !isset($what['key'])) {
+                throw new MissingOneSignalAppInformation();
+            }
+
+            $signalApp = new SignalApp($what['id'], $what['key']);
+            $signalApp->setUserKey($config['userKey']);
+            return $signalApp;
+        }
+
+        if (is_string($what)) {
+            if (!isset($config['apps'][$what])) {
+                throw new MissingOneSignalAppConfiguration($what);
+            }
+
+            $app = $config['apps'][$config['default_app']];
+            $signalApp = new SignalApp($app['id'], $app['key']);
+            $signalApp->setUserKey($config['userKey']);
+            return $signalApp;
+        }
     }
 }
