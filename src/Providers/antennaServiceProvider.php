@@ -35,7 +35,9 @@ class AntennaServiceProvider extends ServiceProvider
 
         $this->app->singleton('SignalApp', function ($app) use ($config) {
             $app = $config['apps'][$config['default_app']];
-            return new SignalApp($app['id'], $app['key']);
+            $signalApp = new SignalApp($app['id'], $app['key']);
+            $signalApp->setUserKey($config['userKey']);
+            return $signalApp;
         });
 
     }

@@ -2,8 +2,11 @@
 
 namespace Bondacom\antenna;
 
+use Bondacom\antenna\Exceptions\MissingOneSignalData;
 use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OneSignalConsumer
 {
@@ -12,14 +15,14 @@ class OneSignalConsumer
      * One Signal Base URL
      * @var string
      */
-    protected $baseUrl = 'https://onesignal.com/api/';
+    const BASE_URL = 'https://onesignal.com/api/';
 
     /**
      * One Signal Api version
      *
      * @var string
      */
-    protected $version = 'v1';
+    const API_VERSION = 'v1';
 
     /**
      * OneSignal USER AUTH KEY (https://onesignal.com/users/me)
@@ -48,6 +51,13 @@ class OneSignalConsumer
      * @var Client
      */
     protected $guzzleClient;
+
+    /**
+     * HTTP to send Headers
+     *
+     * @var array
+     */
+    protected $headers = [];
 
     /**
      * OneSignalConsumer constructor.
@@ -87,56 +97,180 @@ class OneSignalConsumer
         return $this;
     }
 
-    public function createApp()
+    /**
+     * Creates a new OneSignal APP.
+     *
+     * @param array $data Data APP
+     *
+     * @return Object
+     */
+    public function createApp($data)
     {
+        // For references about the fields go to https://documentation.onesignal.com/reference#create-an-app
         $fields = [
-            'name',
-            'apns_env',
-            'apns_p12',
-            'apns_p12_password',
-            'gcm_key',
-            'android_gcm_sender_id',
-            'chrome_web_origin',
-            'chrome_web_default_notification_icon',
-            'chrome_web_sub_domain',
-            'safari_apns_p12',
-            'safari_apns_p12_password',
-            'site_name',
-            'safari_site_origin',
-            'safari_icon_256_256',
-            'chrome_key'
+            //App name, REQUIRED
+            'name' => true,
+
+            // IOS Configuration
+            'apns_env' => false,
+            'apns_p12' => false,
+            'apns_p12_password' => false,
+
+            // Android Configuration
+            'gcm_key' => false,
+            'android_gcm_sender_id' => false,
+
+            // Web notifications (Chrome and Firefox)
+            'chrome_web_origin' => false,
+            'chrome_web_default_notification_icon' => false,
+            'chrome_web_sub_domain' => false,
+
+            // Web notifications (Safari)
+            'safari_apns_p12' => false,
+            'safari_apns_p12_password' => false,
+            'site_name' => false,
+            'safari_site_origin' => false,
+            'safari_icon_256_256' => false,
+
+            //Chrome extension
+            'chrome_key' => false
         ];
-        $this->assertHasUserKey();
 
+        $this->validateData($fields, $data);
+        $this->addUserKey();
+
+        return $this->post('apps', $data);
     }
 
     /**
-     * Check if User Key is set.
+     * Validate if we have the minimum required data
      *
-     * If there is not a user key this method will throw an exception.
+     * @param $fields
+     * @param $data
      *
-     * @throws MissingUserKeyRequired
+     * @throws MissingOneSignalData
+     *
+     * @return OneSignalConsumer
      */
-    public function assertHasUserKey()
+    private function validateData($fields, $data)
     {
-        if(!$this->userKey)
-        {
-            throw new MissingUserKeyRequired();
+        foreach ($fields AS $param => $required) {
+            if ($required && !array_key_exists($param, $data)) {
+                throw new MissingOneSignalData($param);
+            }
         }
+
+        return $this;
     }
 
     /**
-     * Check if there is any app loaded
+     * Checks if User Key is set.
      *
      * If there is not a user key this method will throw an exception.
      *
+     * If is there, then, will add the proper header
+     *
      * @throws MissingUserKeyRequired
+     *
+     * @return OneSignalConsumer
      */
-    public function assertHasAppLoaded()
+    public function addUserKey()
     {
-        if(!$this->appId || !$this->appKey)
-        {
+        if (!$this->userKey) {
             throw new MissingUserKeyRequired();
         }
+
+        $this->headers['headers']['Authorization'] = 'Basic ' . $this->userKey;
+
+        return $this;
+    }
+
+    /**
+     * Check if app is load.
+     *
+     * If there is not a app this method will throw an exception.
+     *
+     * If is there, then, will add the proper header
+     *
+     * @throws MissingUserKeyRequired
+     *
+     * @return OneSignalConsumer
+     */
+    public function addAppData()
+    {
+        if (!$this->appId || !$this->appKey) {
+            throw new MissingUserKeyRequired();
+        }
+
+        $this->headers['headers']['Authorization'] = 'Basic ' . $this->appKey;
+
+        return $this;
+    }
+
+    /**
+     * Make a POST request.
+     *
+     * @param $endpoint
+     * @param $data
+     *
+     * @return object
+     */
+    public function post($endpoint, $data)
+    {
+        $this->headers['Content-Type'] = 'application/json';
+        $this->headers['json'] = $data;
+
+        try {
+            $request = $this->guzzleClient->post(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
+                $this->headers);
+        } catch (RequestException $e) {
+            return $this->processResponse($e->getResponse());
+        }
+
+        return $this->processResponse($request);
+    }
+
+    /**
+     * Process response
+     *
+     * @param $request
+     *
+     * @return object
+     */
+    public function processResponse($request)
+    {
+        $response = json_decode($request->getBody()->getContents());
+        return $response;
+    }
+
+
+    /**
+     * Get user key value
+     *
+     * @return string
+     */
+    public function getUserKey()
+    {
+        return $this->userKey;
+    }
+
+    /**
+     * Get app id value
+     *
+     * @return string
+     */
+    public function getAppId()
+    {
+        return $this->appId;
+    }
+
+    /**
+     * Get app key value
+     *
+     * @return string
+     */
+    public function getAppKey()
+    {
+        return $this->appKey;
     }
 }

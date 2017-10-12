@@ -1,5 +1,14 @@
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Antenna ~ One Signal Wrapper for Laravel
+|--------------------------------------------------------------------------
+| Client configuration
+|
+| You can find more information in (https://github.com/bondacom/Antenna)
+*/
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -7,7 +16,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Used to manage apps
-    | You can found it on https://onesignal.com/users/me
+    | You can find it on https://onesignal.com/users/me
     */
     'userKey' => env('ONESIGNAL_USER_KEY'),
 
@@ -40,5 +49,4 @@ return [
             'key' => env('ONESIGNAL_APP_KEY'),
         ]
     ]
-
 ];

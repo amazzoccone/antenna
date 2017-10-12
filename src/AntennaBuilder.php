@@ -18,15 +18,21 @@ class AntennaBuilder
      */
     public function __construct($userKey)
     {
-        $this->oneSignalConsumer = app('OneSignalConsumer');
+        $this->oneSignalConsumer = app(OneSignalConsumer::class);
         $this->oneSignalConsumer->setUserKey($userKey);
     }
 
     /**
+     * @param array $data
+     *
      * @return SignalApp
      */
-    public function create()
+    public function create($data)
     {
+        $creationResponse = $this->oneSignalConsumer->createApp($data);
+        $app = new SignalApp($creationResponse->id, $creationResponse->basic_auth_key, $creationResponse);
+        $app->setUserKey($this->oneSignalConsumer->getAppKey());
 
+        return $app;
     }
 }
