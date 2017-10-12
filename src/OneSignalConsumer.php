@@ -6,7 +6,6 @@ use Bondacom\antenna\Exceptions\MissingOneSignalData;
 use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OneSignalConsumer
 {
@@ -83,6 +82,16 @@ class OneSignalConsumer
     }
 
     /**
+     * Get user key value
+     *
+     * @return string
+     */
+    public function getUserKey()
+    {
+        return $this->userKey;
+    }
+
+    /**
      * Set One Signal App
      *
      * @param $appId string App ID
@@ -96,6 +105,30 @@ class OneSignalConsumer
         $this->appKey = $appKey;
         return $this;
     }
+
+    /**
+     * Get app id value
+     *
+     * @return string
+     */
+    public function getAppId()
+    {
+        return $this->appId;
+    }
+
+    /**
+     * Get app key value
+     *
+     * @return string
+     */
+    public function getAppKey()
+    {
+        return $this->appKey;
+    }
+
+//**********************************
+//          APP ENDPOINTS
+//**********************************
 
     /**
      * Creates a new OneSignal APP.
@@ -141,6 +174,24 @@ class OneSignalConsumer
 
         return $this->post('apps', $data);
     }
+
+    /**
+     * Creates a new OneSignal APP.
+     *
+     * @param array $data Data APP
+     *
+     * @return Object
+     */
+    public function getApp()
+    {
+        $this->assetHasAppData();
+        $this->addUserKey();
+        return $this->get('apps/'.$this->appId);
+    }
+
+//**********************************
+//          INTERAL FUNCTIONS
+//**********************************
 
     /**
      * Validate if we have the minimum required data
@@ -196,7 +247,7 @@ class OneSignalConsumer
      *
      * @return OneSignalConsumer
      */
-    public function addAppData()
+    public function addAppKey()
     {
         if (!$this->appId || !$this->appKey) {
             throw new MissingUserKeyRequired();
@@ -207,6 +258,23 @@ class OneSignalConsumer
         return $this;
     }
 
+    /**
+     * Sometimes, you need app data (For example app id in getApp function) but you don't want add appKey.
+     *
+     * In this moment you can use this method.
+     *
+     * @throws MissingUserKeyRequired
+     */
+    public function assetHasAppData()
+    {
+        if (!$this->appId || !$this->appKey) {
+            throw new MissingUserKeyRequired();
+        }
+    }
+
+//**********************************
+//        REQUEST METHODS
+//**********************************
     /**
      * Make a POST request.
      *
@@ -223,11 +291,28 @@ class OneSignalConsumer
         try {
             $request = $this->guzzleClient->post(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
                 $this->headers);
+            return $this->processResponse($request);
         } catch (RequestException $e) {
             return $this->processResponse($e->getResponse());
         }
+    }
 
-        return $this->processResponse($request);
+    /**
+     * Make a get request
+     *
+     * @param $endpoint
+     *
+     * @return object
+     */
+    public function get($endpoint)
+    {
+        try {
+            $request = $this->guzzleClient->get(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
+                $this->headers);
+            return $this->processResponse($request);
+        } catch (RequestException $e) {
+            return $this->processResponse($e->getResponse());
+        }
     }
 
     /**
@@ -240,37 +325,7 @@ class OneSignalConsumer
     public function processResponse($request)
     {
         $response = json_decode($request->getBody()->getContents());
+        $this->headers = [];
         return $response;
-    }
-
-
-    /**
-     * Get user key value
-     *
-     * @return string
-     */
-    public function getUserKey()
-    {
-        return $this->userKey;
-    }
-
-    /**
-     * Get app id value
-     *
-     * @return string
-     */
-    public function getAppId()
-    {
-        return $this->appId;
-    }
-
-    /**
-     * Get app key value
-     *
-     * @return string
-     */
-    public function getAppKey()
-    {
-        return $this->appKey;
     }
 }

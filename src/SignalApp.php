@@ -5,13 +5,6 @@ namespace Bondacom\antenna;
 class SignalApp extends AntennaModel
 {
     /**
-     * OneSignal Client
-     *
-     * @var OneSignalConsumer
-     */
-    protected $oneSignalConsumer;
-
-    /**
      * Object name in OneSignal system (Generally, the name of the endpoint)
      *
      * @var string
@@ -28,22 +21,17 @@ class SignalApp extends AntennaModel
      */
     public function __construct($appID, $appKey, $metaData = [])
     {
-        $this->oneSignalConsumer = app(OneSignalConsumer::class);
-        $this->oneSignalConsumer->setApp($appID, $appKey);
+        $oneSignalConsumer = app(OneSignalConsumer::class);
+        $oneSignalConsumer->setApp($appID, $appKey);
+        parent::__construct($oneSignalConsumer);
 
+        $this->id = $appID;
+        $this->basic_auth_key = $appKey;
         $this->loadFromMetadata($metaData);
     }
 
-    /**
-     * Set user key (In order to update app, for example)
-     *
-     * @param $key
-     *
-     * @return $this
-     */
-    public function setUserKey($key)
+    public function show()
     {
-        $this->oneSignalConsumer->setUserKey($key);
         return $this;
     }
 }

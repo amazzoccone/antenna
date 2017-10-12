@@ -16,7 +16,14 @@ class AntennaModel
      *
      * @var bool
      */
-    protected $loaded = false;
+    protected $isLoad = false;
+
+    /**
+     * OneSignal Client
+     *
+     * @var OneSignalConsumer
+     */
+    protected $oneSignalConsumer;
 
     /**
      * Check if we must go to OneSignal server to update it.
@@ -24,6 +31,30 @@ class AntennaModel
      * @var bool
      */
     protected $isDirty = false;
+
+    /**
+     * AntennaModel constructor.
+     *
+     * @param OneSignalConsumer $oneSignalConsumer
+     */
+    function __construct(OneSignalConsumer $oneSignalConsumer)
+    {
+        $this->oneSignalConsumer = $oneSignalConsumer;
+    }
+
+    /**
+     * Set user key (In order to update app, for example)
+     *
+     * @param $key
+     *
+     * @return $this
+     */
+    public function setUserKey($key)
+    {
+        $this->oneSignalConsumer->setUserKey($key);
+        return $this;
+    }
+
 
     /**
      * Get an attribute from the model.
@@ -43,7 +74,7 @@ class AntennaModel
         }
 
         // If we don't have this attribute, and object is not loaded, then, we will load the object
-        if (empty($this->attributes) AND !$this->loaded) {
+        if ((empty($this->attributes) OR !isset($this->attributes[$key])) AND !$this->isLoad) {
             $this->load();
         }
 
@@ -89,7 +120,8 @@ class AntennaModel
      */
     private function load()
     {
-        // TODO
+        $this->loadFromMetadata($this->oneSignalConsumer->getApp());
+        $this->isLoad = true;
     }
 
 
@@ -126,8 +158,12 @@ class AntennaModel
      */
     public function loadFromMetadata($data)
     {
+        if (empty($data)) {
+            return $this;
+        }
+
         $this->fillObject($data);
-        $this->loaded = true;
+        $this->isLoad = true;
         $this->isDirty = false;
 
         return $this;
