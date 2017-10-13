@@ -4,7 +4,7 @@ namespace Bondacom\antenna\Exceptions;
 
 use Throwable;
 
-class MissingOneSignalAppConfiguration extends \Exception
+class MissingOneSignalAppConfiguration extends AntennaException
 {
     public function __construct($appName, $code = 0, Throwable $previous = null)
     {

@@ -2,6 +2,8 @@
 
 namespace Bondacom\antenna;
 
+use Bondacom\antenna\Exceptions\OneSignalSaveException;
+
 class AntennaModel
 {
     /**
@@ -147,6 +149,10 @@ class AntennaModel
 
         $method = ($this->attributes['id'] ? 'update' : 'create') . $this->oneSignalObject;
         $result = $this->oneSignalConsumer->{$method}($this->attributes);
+
+        if (isset($result->errors)) {
+            throw new OneSignalSaveException(implode(",", $result->errors));
+        }
 
         $this->loadFromMetadata($result);
         $this->isDirty = false;
