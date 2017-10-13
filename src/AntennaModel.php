@@ -54,7 +54,7 @@ class AntennaModel
         if (!$key) {
             return $this;
         }
-        
+
         $this->oneSignalConsumer->setUserKey($key);
         return $this;
     }
@@ -88,6 +88,11 @@ class AntennaModel
         }
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
     private function setAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
