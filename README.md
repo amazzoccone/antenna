@@ -1,8 +1,6 @@
 # Antenna
 
-###### [FAQ](#faq) | [Contributing](https://github.com/GoogleChrome/puppeteer/blob/master/CONTRIBUTING.md)
-
-> Puppeteer is a Node library which provides a high-level API to control [headless](https://developers.google.com/web/updates/2017/04/headless-chrome) Chrome over the [DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/). It can also be configured to use full (non-headless) Chrome.
+###### [FAQ](#faq) | [Contributing](https://github.com/bondacom/Antenna/blob/master/CONTRIBUTING.md)
 
 > Antenna is a Laravel library which provides high-level functionalities to control [OneSignal](https://onesignal.com).
 
@@ -35,8 +33,7 @@ php artisan vendor:publish --provider="Bondacom\antenna\Providers\AntennaService
 
 ### Usage
 
-It's really simple! Use Antenna Facade
-of `Browser`, open pages, and then manipulate them with [Puppeteer's API](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#).
+It's really simple!
 
 **Example** - create a One Signal App:
 
