@@ -35,7 +35,7 @@ Comments should be generally avoided. If the code would not be understood withou
 
 ## Writing Documentation
 
-All public functionalities must have a descriptive entry in the [README.md](https://github.com/bondacom/cupona/blob/master/docs/README.md).
+All public functionalities must have a descriptive entry in the [README.md](https://github.com/bondacom/Antenna/blob/master/docs/README.md).
 
 ## Writing Tests
 
