@@ -45,27 +45,23 @@ class OneSignalConsumer
     protected $appKey = false;
 
     /**
-     * Guzzle Client
-     *
-     * @var Client
-     */
-    protected $guzzleClient;
-
-    /**
      * HTTP to send Headers
      *
      * @var array
      */
     protected $headers = [];
+    /**
+     * @var AntennaRequester
+     */
+    private $requester;
 
     /**
      * OneSignalConsumer constructor.
-     *
-     * @param Client $guzzleClient
+     * @param AntennaRequester $requester
      */
-    function __construct(Client $guzzleClient)
+    public function __construct(AntennaRequester $requester)
     {
-        $this->guzzleClient = $guzzleClient;
+        $this->requester = $requester;
     }
 
     /**
@@ -172,7 +168,7 @@ class OneSignalConsumer
         $this->validateData($fields, $data);
         $this->addUserKey();
 
-        return $this->post('apps', $data);
+        return $this->requester->post('apps', $data);
     }
 
     /**
@@ -186,7 +182,7 @@ class OneSignalConsumer
     {
         $this->assetHasAppData();
         $this->addUserKey();
-        return $this->get('apps/'.$this->appId);
+        return $this->requester->get('apps/'.$this->appId);
     }
 
     /**
@@ -200,7 +196,7 @@ class OneSignalConsumer
     {
         $this->assetHasAppData();
         $this->addUserKey();
-        return $this->put('apps/'.$this->appId, $data);
+        return $this->requester->put('apps/'.$this->appId, $data);
     }
 
 //**********************************
@@ -284,85 +280,5 @@ class OneSignalConsumer
         if (!$this->appId || !$this->appKey) {
             throw new MissingUserKeyRequired();
         }
-    }
-
-//**********************************
-//        REQUEST METHODS
-//**********************************
-    /**
-     * Make a POST request.
-     *
-     * @param $endpoint
-     * @param $data
-     *
-     * @return object
-     */
-    public function post($endpoint, $data)
-    {
-        $this->headers['Content-Type'] = 'application/json';
-        $this->headers['json'] = $data;
-
-        return $this->makeRequest($endpoint,'post');
-    }
-
-    /**
-     * Make a PUT request.
-     *
-     * @param $endpoint
-     * @param $data
-     *
-     * @return object
-     */
-    public function put($endpoint, $data)
-    {
-        $this->headers['Content-Type'] = 'application/json';
-        $this->headers['json'] = $data;
-
-        return $this->makeRequest($endpoint,'put');
-    }
-
-    /**
-     * Make a get request
-     *
-     * @param $endpoint
-     *
-     * @return object
-     */
-    public function get($endpoint)
-    {
-        return $this->makeRequest($endpoint,'get');
-    }
-
-    /**
-     * Make a HTTP request and parse response
-     *
-     * @param $endpoint
-     * @param $method
-     *
-     * @return object
-     */
-    private function makeRequest($endpoint,$method)
-    {
-        try {
-            $request = $this->guzzleClient->{$method}(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
-                $this->headers);
-            return $this->processResponse($request);
-        } catch (RequestException $e) {
-            return $this->processResponse($e->getResponse());
-        }
-    }
-
-    /**
-     * Process response
-     *
-     * @param $request
-     *
-     * @return object
-     */
-    public function processResponse($request)
-    {
-        $response = json_decode($request->getBody()->getContents());
-        $this->headers = [];
-        return $response;
     }
 }
