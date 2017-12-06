@@ -15,11 +15,20 @@ class SignalApp extends AntennaModel
     protected $oneSignalObject = 'App';
 
     /**
+     * @var string
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $basic_auth_key;
+
+    /**
      * Signal constructor.
      *
      * @param string $appID OneSignal APP ID
      * @param string $appKey OneSignal APP Key
-     * @param string $userKey If you want edit and save app, you will need UserKey. This is a optional parameter.
      * @param array $metaData If you have all the information, can send metadata in order to avoid make a new call. This is a optional parameter.
      */
     public function __construct($appID, $appKey, $metaData = [])

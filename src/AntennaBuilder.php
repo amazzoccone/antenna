@@ -27,7 +27,7 @@ class AntennaBuilder
      *
      * @return SignalApp
      */
-    public function create($data)
+    public function create(array $data)
     {
         $creationResponse = $this->oneSignalConsumer->createApp($data);
         $app = new SignalApp($creationResponse->id, $creationResponse->basic_auth_key, $creationResponse);
