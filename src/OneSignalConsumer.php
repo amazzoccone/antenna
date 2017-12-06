@@ -165,8 +165,8 @@ class OneSignalConsumer
             'chrome_key' => false
         ];
 
-        $this->validateData($fields, $data);
-        $this->addUserKey();
+        $this->assertData($fields, $data)
+            ->addUserKey();
 
         return $this->requester->post('apps', $data);
     }
@@ -174,14 +174,13 @@ class OneSignalConsumer
     /**
      * Creates a new OneSignal APP.
      *
-     * @param array $data Data APP
-     *
      * @return Object
      */
     public function getApp()
     {
-        $this->assetHasAppData();
-        $this->addUserKey();
+        $this->assertHasAppData()
+            ->addUserKey();
+
         return $this->requester->get('apps/'.$this->appId);
     }
 
@@ -194,36 +193,12 @@ class OneSignalConsumer
      */
     public function updateApp($data)
     {
-        $this->assetHasAppData();
-        $this->addUserKey();
+        $this->assertHasAppData()
+            ->addUserKey();
+
         return $this->requester->put('apps/'.$this->appId, $data);
     }
-
-//**********************************
-//          INTERAL FUNCTIONS
-//**********************************
-
-    /**
-     * Validate if we have the minimum required data
-     *
-     * @param $fields
-     * @param $data
-     *
-     * @throws MissingOneSignalData
-     *
-     * @return OneSignalConsumer
-     */
-    private function validateData($fields, $data)
-    {
-        foreach ($fields AS $param => $required) {
-            if ($required && !array_key_exists($param, $data)) {
-                throw new MissingOneSignalData($param);
-            }
-        }
-
-        return $this;
-    }
-
+    
     /**
      * Checks if User Key is set.
      *
@@ -233,7 +208,7 @@ class OneSignalConsumer
      *
      * @throws MissingUserKeyRequired
      *
-     * @return OneSignalConsumer
+     * @return $this
      */
     public function addUserKey()
     {
@@ -255,7 +230,7 @@ class OneSignalConsumer
      *
      * @throws MissingUserKeyRequired
      *
-     * @return OneSignalConsumer
+     * @return $this
      */
     public function addAppKey()
     {
@@ -269,16 +244,39 @@ class OneSignalConsumer
     }
 
     /**
+     * Validate if we have the minimum required data
+     *
+     * @param $fields
+     * @param $data
+     *
+     * @throws MissingOneSignalData
+     * @return $this
+     */
+    private function assertData($fields, $data)
+    {
+        foreach ($fields AS $param => $required) {
+            if ($required && !array_key_exists($param, $data)) {
+                throw new MissingOneSignalData($param);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Sometimes, you need app data (For example app id in getApp function) but you don't want add appKey.
      *
      * In this moment you can use this method.
      *
      * @throws MissingUserKeyRequired
+     * @return $this
      */
-    public function assetHasAppData()
+    public function assertHasAppData()
     {
         if (!$this->appId || !$this->appKey) {
             throw new MissingUserKeyRequired();
         }
+
+        return $this;
     }
 }
