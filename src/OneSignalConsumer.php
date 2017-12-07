@@ -2,8 +2,8 @@
 
 namespace Bondacom\antenna;
 
+use Bondacom\antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\antenna\Exceptions\MissingOneSignalData;
-use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
 
 class OneSignalConsumer
 {
@@ -12,7 +12,7 @@ class OneSignalConsumer
      *
      * @var string
      */
-    protected $userKey = false;
+    protected $userKey = null;
 
     /**
      * One Signal App ID
@@ -151,7 +151,7 @@ class OneSignalConsumer
     }
 
     /**
-     * Creates a new OneSignal APP.
+     * Get an specified OneSignal APP.
      *
      * @return Object
      */
@@ -165,7 +165,7 @@ class OneSignalConsumer
     }
 
     /**
-     * Creates a new OneSignal APP.
+     * Updates OneSignal APP.
      *
      * @param array $data Data APP
      *
@@ -201,17 +201,13 @@ class OneSignalConsumer
     }
 
     /**
-     * Sometimes, you need app data (For example app id in getApp function) but you don't want add appKey.
-     *
-     * In this moment you can use this method.
-     *
-     * @throws MissingUserKeyRequired
      * @return $this
+     * @throws MissingOneSignalAppInformation
      */
     private function assertHasAppData()
     {
         if (!$this->appId || !$this->appKey) {
-            throw new MissingUserKeyRequired();
+            throw new MissingOneSignalAppInformation();
         }
 
         return $this;

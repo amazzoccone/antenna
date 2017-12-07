@@ -2,6 +2,7 @@
 
 namespace Bondacom\antenna;
 
+use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -41,10 +42,16 @@ class AntennaRequester
 
     /**
      *
+     * @param string $key
      * @return $this
+     * @throws MissingUserKeyRequired
      */
     public function setUserKey($key)
     {
+        if (empty($key)) {
+            throw new MissingUserKeyRequired();
+        }
+
         $this->headers['headers']['Authorization'] = 'Basic ' . $key;
 
         return $this;
