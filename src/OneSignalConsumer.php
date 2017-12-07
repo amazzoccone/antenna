@@ -4,25 +4,9 @@ namespace Bondacom\antenna;
 
 use Bondacom\antenna\Exceptions\MissingOneSignalData;
 use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 class OneSignalConsumer
 {
-
-    /**
-     * One Signal Base URL
-     * @var string
-     */
-    const BASE_URL = 'https://onesignal.com/api/';
-
-    /**
-     * One Signal Api version
-     *
-     * @var string
-     */
-    const API_VERSION = 'v1';
-
     /**
      * OneSignal USER AUTH KEY (https://onesignal.com/users/me)
      *
@@ -165,10 +149,11 @@ class OneSignalConsumer
             'chrome_key' => false
         ];
 
-        $this->assertData($fields, $data)
-            ->addUserKey();
+        $this->assertData($fields, $data);
 
-        return $this->requester->post('apps', $data);
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->post('apps', $data);
     }
 
     /**
@@ -178,10 +163,11 @@ class OneSignalConsumer
      */
     public function getApp()
     {
-        $this->assertHasAppData()
-            ->addUserKey();
+        $this->assertHasAppData();
 
-        return $this->requester->get('apps/'.$this->appId);
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->get('apps/'.$this->appId);
     }
 
     /**
@@ -193,54 +179,11 @@ class OneSignalConsumer
      */
     public function updateApp($data)
     {
-        $this->assertHasAppData()
-            ->addUserKey();
+        $this->assertHasAppData();
 
-        return $this->requester->put('apps/'.$this->appId, $data);
-    }
-    
-    /**
-     * Checks if User Key is set.
-     *
-     * If there is not a user key this method will throw an exception.
-     *
-     * If is there, then, will add the proper header
-     *
-     * @throws MissingUserKeyRequired
-     *
-     * @return $this
-     */
-    public function addUserKey()
-    {
-        if (!$this->userKey) {
-            throw new MissingUserKeyRequired();
-        }
-
-        $this->headers['headers']['Authorization'] = 'Basic ' . $this->userKey;
-
-        return $this;
-    }
-
-    /**
-     * Check if app is load.
-     *
-     * If there is not a app this method will throw an exception.
-     *
-     * If is there, then, will add the proper header
-     *
-     * @throws MissingUserKeyRequired
-     *
-     * @return $this
-     */
-    public function addAppKey()
-    {
-        if (!$this->appId || !$this->appKey) {
-            throw new MissingUserKeyRequired();
-        }
-
-        $this->headers['headers']['Authorization'] = 'Basic ' . $this->appKey;
-
-        return $this;
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->put('apps/'.$this->appId, $data);
     }
 
     /**
@@ -271,7 +214,7 @@ class OneSignalConsumer
      * @throws MissingUserKeyRequired
      * @return $this
      */
-    public function assertHasAppData()
+    private function assertHasAppData()
     {
         if (!$this->appId || !$this->appKey) {
             throw new MissingUserKeyRequired();

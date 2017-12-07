@@ -8,9 +8,27 @@ use GuzzleHttp\Exception\RequestException;
 class AntennaRequester
 {
     /**
+     * One Signal Base URL
+     * @var string
+     */
+    const BASE_URL = 'https://onesignal.com/api/';
+
+    /**
+     * One Signal Api version
+     *
+     * @var string
+     */
+    const API_VERSION = 'v1';
+
+    /**
      * @var Client
      */
     private $guzzleClient;
+
+    /**
+     * @var array
+     */
+    private $headers;
 
     /**
      * AntennaRequester constructor.
@@ -19,6 +37,17 @@ class AntennaRequester
     public function __construct(Client $guzzleClient)
     {
         $this->guzzleClient = $guzzleClient;
+    }
+
+    /**
+     *
+     * @return $this
+     */
+    public function setUserKey($key)
+    {
+        $this->headers['headers']['Authorization'] = 'Basic ' . $key;
+
+        return $this;
     }
 
     /**
@@ -91,10 +120,9 @@ class AntennaRequester
      *
      * @return object
      */
-    public function processResponse($request)
+    private function processResponse($request)
     {
-        $response = json_decode($request->getBody()->getContents());
         $this->headers = [];
-        return $response;
+        return json_decode($request->getBody()->getContents());
     }
 }
