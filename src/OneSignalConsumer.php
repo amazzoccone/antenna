@@ -29,12 +29,6 @@ class OneSignalConsumer
     protected $appKey = false;
 
     /**
-     * HTTP to send Headers
-     *
-     * @var array
-     */
-    protected $headers = [];
-    /**
      * @var AntennaRequester
      */
     private $requester;
