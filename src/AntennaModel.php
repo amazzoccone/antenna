@@ -2,7 +2,7 @@
 
 namespace Bondacom\antenna;
 
-use Bondacom\antenna\Exceptions\OneSignalSaveException;
+use Bondacom\antenna\Exceptions\AntennaSaveException;
 
 class AntennaModel
 {
@@ -148,7 +148,7 @@ class AntennaModel
             $this->consumer->create($this->attributes);
 
         if (isset($result->errors)) {
-            throw new OneSignalSaveException(implode(",", $result->errors));
+            throw new AntennaSaveException(implode(",", $result->errors));
         }
 
         $this->loadFromMetadata($result);
