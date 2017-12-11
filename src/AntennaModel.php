@@ -129,9 +129,7 @@ class AntennaModel
      */
     private function load()
     {
-        $method = 'get' . $this->oneSignalObject;
-
-        $this->loadFromMetadata($this->consumer->$method());
+        $this->loadFromMetadata($this->consumer->get());
         $this->isLoad = true;
     }
 
@@ -145,8 +143,9 @@ class AntennaModel
             return $this;
         }
 
-        $method = ($this->attributes['id'] ? 'update' : 'create') . $this->oneSignalObject;
-        $result = $this->consumer->{$method}($this->attributes);
+        $result = $this->attributes['id'] ?
+            $this->consumer->update($this->attributes) :
+            $this->consumer->create($this->attributes);
 
         if (isset($result->errors)) {
             throw new OneSignalSaveException(implode(",", $result->errors));

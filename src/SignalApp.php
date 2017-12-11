@@ -8,13 +8,6 @@ use Bondacom\antenna\Exceptions\MissingOneSignalAppInformation;
 class SignalApp extends AntennaModel
 {
     /**
-     * Object name in OneSignal system (Generally, the name of the endpoint)
-     *
-     * @var string
-     */
-    protected $oneSignalObject = 'App';
-
-    /**
      * Signal constructor.
      *
      * @param string $appID OneSignal APP ID
@@ -23,9 +16,9 @@ class SignalApp extends AntennaModel
      */
     public function __construct($appID, $appKey, $metaData = [])
     {
-        $oneSignalConsumer = app(OneSignalConsumer::class);
-        $oneSignalConsumer->setApp($appID, $appKey);
-        parent::__construct($oneSignalConsumer);
+        $consumer = app(OneSignalConsumer::class);
+        $consumer->setApp($appID, $appKey);
+        parent::__construct($consumer);
 
         $this->id = $appID;
         $this->basic_auth_key = $appKey;

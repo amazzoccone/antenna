@@ -5,25 +5,19 @@ namespace Bondacom\antenna;
 interface ConsumerInterface
 {
     /**
-     * @param $userKey
+     * @param $data
      * @return mixed
      */
-    public function setUserKey($userKey);
+    public function create($data);
+
+    /**
+     * @return mixed
+     */
+    public function get();
 
     /**
      * @param $data
      * @return mixed
      */
-    public function createApp($data);
-
-    /**
-     * @return mixed
-     */
-    public function getApp();
-
-    /**
-     * @param $data
-     * @return mixed
-     */
-    public function updateApp($data);
+    public function update($data);
 }

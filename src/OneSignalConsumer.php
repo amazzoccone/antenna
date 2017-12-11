@@ -100,10 +100,6 @@ class OneSignalConsumer implements ConsumerInterface
         return $this->appKey;
     }
 
-//**********************************
-//          APP ENDPOINTS
-//**********************************
-
     /**
      * Creates a new OneSignal APP.
      *
@@ -111,7 +107,7 @@ class OneSignalConsumer implements ConsumerInterface
      *
      * @return Object
      */
-    public function createApp($data)
+    public function create($data)
     {
         // For references about the fields go to https://documentation.onesignal.com/reference#create-an-app
         $fields = [
@@ -155,7 +151,7 @@ class OneSignalConsumer implements ConsumerInterface
      *
      * @return Object
      */
-    public function getApp()
+    public function get()
     {
         $this->assertHasAppData();
 
@@ -171,7 +167,7 @@ class OneSignalConsumer implements ConsumerInterface
      *
      * @return Object
      */
-    public function updateApp($data)
+    public function update($data)
     {
         $this->assertHasAppData();
 

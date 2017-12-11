@@ -5,33 +5,28 @@ namespace Bondacom\antenna;
 class AntennaBuilder
 {
     /**
-     * OneSignal Client
-     *
-     * @var OneSignalConsumer
+     * @var ConsumerInterface
      */
-    protected $oneSignalConsumer;
+    protected $consumer;
 
     /**
-     * antennaClass constructor.
-     *
-     * @param string $userKey One Signal USER AUTH KEY (https://onesignal.com/users/me)
+     * @param string $userKey
      */
     public function __construct($userKey)
     {
-        $this->oneSignalConsumer = app(OneSignalConsumer::class);
-        $this->oneSignalConsumer->setUserKey($userKey);
+        $this->consumer = app(OneSignalConsumer::class);
+        $this->consumer->setUserKey($userKey);
     }
 
     /**
      * @param array $data
-     *
      * @return SignalApp
      */
     public function create(array $data)
     {
-        $creationResponse = $this->oneSignalConsumer->createApp($data);
+        $creationResponse = $this->consumer->create($data);
         $app = new SignalApp($creationResponse->id, $creationResponse->basic_auth_key, $creationResponse);
-        $app->setUserKey($this->oneSignalConsumer->getAppKey());
+        $app->setUserKey($this->consumer->getAppKey());
 
         return $app;
     }
