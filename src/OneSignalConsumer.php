@@ -5,7 +5,7 @@ namespace Bondacom\antenna;
 use Bondacom\antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\antenna\Exceptions\MissingOneSignalData;
 
-class OneSignalConsumer
+class OneSignalConsumer implements ConsumerInterface
 {
     /**
      * OneSignal USER AUTH KEY (https://onesignal.com/users/me)

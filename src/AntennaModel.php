@@ -14,18 +14,16 @@ class AntennaModel
     protected $attributes = [];
 
     /**
-     * Check if we must go to OneSignal server to get the model information
+     * Check if we must go to server to get the model information
      *
      * @var bool
      */
     protected $isLoad = false;
 
     /**
-     * OneSignal Client
-     *
-     * @var OneSignalConsumer
+     * @var Consumer
      */
-    protected $oneSignalConsumer;
+    protected $consumer;
 
     /**
      * Check if we must go to OneSignal server to update it.
@@ -37,11 +35,11 @@ class AntennaModel
     /**
      * AntennaModel constructor.
      *
-     * @param OneSignalConsumer $oneSignalConsumer
+     * @param Consumer $consumer
      */
-    function __construct(OneSignalConsumer $oneSignalConsumer)
+    function __construct(Consumer $consumer)
     {
-        $this->oneSignalConsumer = $oneSignalConsumer;
+        $this->consumer = $consumer;
     }
 
     /**
@@ -57,7 +55,7 @@ class AntennaModel
             return $this;
         }
 
-        $this->oneSignalConsumer->setUserKey($key);
+        $this->consumer->setUserKey($key);
         return $this;
     }
 
@@ -133,13 +131,13 @@ class AntennaModel
     {
         $method = 'get' . $this->oneSignalObject;
 
-        $this->loadFromMetadata($this->oneSignalConsumer->$method());
+        $this->loadFromMetadata($this->consumer->$method());
         $this->isLoad = true;
     }
 
 
     /**
-     * Persists attributes from OneSignal server
+     * Persists attributes from server
      */
     public function save()
     {
@@ -148,7 +146,7 @@ class AntennaModel
         }
 
         $method = ($this->attributes['id'] ? 'update' : 'create') . $this->oneSignalObject;
-        $result = $this->oneSignalConsumer->{$method}($this->attributes);
+        $result = $this->consumer->{$method}($this->attributes);
 
         if (isset($result->errors)) {
             throw new OneSignalSaveException(implode(",", $result->errors));
