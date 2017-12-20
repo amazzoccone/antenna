@@ -2,8 +2,8 @@
 
 namespace Bondacom\antenna\Tests;
 
+use Bondacom\antenna\AntennaRequester;
 use Bondacom\antenna\Facades\SignalApp;
-use Bondacom\antenna\OneSignalConsumer;
 
 class SignalAppTest extends TestCase
 {
@@ -17,10 +17,8 @@ class SignalAppTest extends TestCase
         $obj->name = 'Testing';
         $obj->basic_auth_key = str_random();
 
-        $mock = $this->mock(OneSignalConsumer::class)->makePartial();
-        $mock->shouldReceive('getApp')
-            ->never()
-            ->andReturn($obj);
+        $mock = $this->mock(AntennaRequester::class);
+        $mock->shouldReceive('get')->never();
 
         $app = SignalApp::get([
             'id' => random_int(1, 9999),
@@ -40,10 +38,9 @@ class SignalAppTest extends TestCase
         $obj->name = 'Testing';
         $obj->basic_auth_key = str_random();
 
-        $mock = $this->mock(OneSignalConsumer::class)->makePartial();
-        $mock->shouldReceive('updateApp')
-            ->once()
-            ->andReturn($obj);
+        $mock = $this->mock(AntennaRequester::class)->makePartial();
+        $mock->shouldReceive('put')->once()->andReturn($obj);
+        $mock->shouldReceive('setUserKey')->once()->andReturnSelf();
 
         $app = new \Bondacom\antenna\SignalApp(random_int(1, 9999), str_random());
         $app->chrome_web_origin = 'https://example.com';

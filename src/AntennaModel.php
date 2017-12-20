@@ -35,9 +35,9 @@ class AntennaModel
     /**
      * AntennaModel constructor.
      *
-     * @param Consumer $consumer
+     * @param ConsumerInterface $consumer
      */
-    function __construct(Consumer $consumer)
+    function __construct(ConsumerInterface $consumer)
     {
         $this->consumer = $consumer;
     }

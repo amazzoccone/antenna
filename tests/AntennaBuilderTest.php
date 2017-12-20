@@ -2,8 +2,8 @@
 
 namespace Bondacom\antenna\Tests;
 
+use Bondacom\antenna\AntennaRequester;
 use Bondacom\antenna\Facades\AntennaBuilder;
-use Bondacom\antenna\OneSignalConsumer;
 
 class AntennaBuilderTest extends TestCase
 {
@@ -17,17 +17,9 @@ class AntennaBuilderTest extends TestCase
         $obj->name = 'Testing';
         $obj->basic_auth_key = str_random();
 
-        $mock = $this->mock(OneSignalConsumer::class);
-        $mock->shouldReceive('createApp')
-            ->once()
-            ->andReturn($obj);
-        $mock->shouldReceive('setApp')
-            ->once();
-        $mock->shouldReceive('setUserKey')
-            ->twice();
-        $mock->shouldReceive('getAppKey')
-            ->once()
-            ->andReturn(str_random());
+        $mock = $this->mock(AntennaRequester::class)->makePartial();
+        $mock->shouldReceive('post')->once()->andReturn($obj);
+        $mock->shouldReceive('setUserKey')->once()->andReturnSelf();
 
         $app = AntennaBuilder::create([
             'name' => 'Testing One Signal Application',
