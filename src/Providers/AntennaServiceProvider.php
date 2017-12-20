@@ -16,7 +16,7 @@ class AntennaServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../Config/antenna.php' => config_path('antenna.php'),
+            __DIR__ . '/../config/antenna.php' => config_path('antenna.php'),
         ], 'config');
     }
 
