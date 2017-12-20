@@ -15,16 +15,6 @@ class SignalApp extends AntennaModel
     protected $oneSignalObject = 'App';
 
     /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $basic_auth_key;
-
-    /**
      * Signal constructor.
      *
      * @param string $appID OneSignal APP ID
