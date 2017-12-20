@@ -46,7 +46,6 @@ class SignalApp extends AntennaModel
             }
 
             $signalApp = new SignalApp($what['id'], $what['key']);
-            $signalApp->setUserKey($config['userKey']);
             return $signalApp;
         }
 
@@ -58,8 +57,18 @@ class SignalApp extends AntennaModel
             //TODO: Always get default App ?!
             $app = $config['apps'][$config['default_app']];
             $signalApp = new SignalApp($app['id'], $app['key']);
-            $signalApp->setUserKey($config['userKey']);
             return $signalApp;
         }
+    }
+
+    /**
+     * @param array $data
+     * @return SignalApp
+     */
+    public static function create(array $data)
+    {
+        $model = new static($data);
+        $model->save();
+        return $model;
     }
 }

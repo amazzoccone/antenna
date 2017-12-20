@@ -43,24 +43,6 @@ class AntennaModel
     }
 
     /**
-     * Set user key (In order to update app, for example)
-     *
-     * @param $key
-     *
-     * @return $this
-     */
-    public function setUserKey($key)
-    {
-        if (!$key) {
-            return $this;
-        }
-
-        $this->consumer->setUserKey($key);
-        return $this;
-    }
-
-
-    /**
      * Get an attribute from the model.
      *
      * @param  string $key
