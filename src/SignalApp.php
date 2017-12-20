@@ -15,11 +15,20 @@ class SignalApp extends AntennaModel
     protected $oneSignalObject = 'App';
 
     /**
+     * @var string
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $basic_auth_key;
+
+    /**
      * Signal constructor.
      *
      * @param string $appID OneSignal APP ID
      * @param string $appKey OneSignal APP Key
-     * @param string $userKey If you want edit and save app, you will need UserKey. This is a optional parameter.
      * @param array $metaData If you have all the information, can send metadata in order to avoid make a new call. This is a optional parameter.
      */
     public function __construct($appID, $appKey, $metaData = [])
@@ -33,8 +42,15 @@ class SignalApp extends AntennaModel
         $this->loadFromMetadata($metaData);
     }
 
+    /**
+     * @param $what
+     * @return $this|SignalApp
+     * @throws MissingOneSignalAppConfiguration
+     * @throws MissingOneSignalAppInformation
+     */
     public function get($what = false)
     {
+        //TODO: Why someone would use get() to return $this ?!
         if (!$what) {
             return $this;
         }
@@ -56,6 +72,7 @@ class SignalApp extends AntennaModel
                 throw new MissingOneSignalAppConfiguration($what);
             }
 
+            //TODO: Always get default App ?!
             $app = $config['apps'][$config['default_app']];
             $signalApp = new SignalApp($app['id'], $app['key']);
             $signalApp->setUserKey($config['userKey']);

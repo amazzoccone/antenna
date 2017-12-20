@@ -2,33 +2,17 @@
 
 namespace Bondacom\antenna;
 
+use Bondacom\antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\antenna\Exceptions\MissingOneSignalData;
-use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 class OneSignalConsumer
 {
-
-    /**
-     * One Signal Base URL
-     * @var string
-     */
-    const BASE_URL = 'https://onesignal.com/api/';
-
-    /**
-     * One Signal Api version
-     *
-     * @var string
-     */
-    const API_VERSION = 'v1';
-
     /**
      * OneSignal USER AUTH KEY (https://onesignal.com/users/me)
      *
      * @var string
      */
-    protected $userKey = false;
+    protected $userKey = null;
 
     /**
      * One Signal App ID
@@ -45,27 +29,17 @@ class OneSignalConsumer
     protected $appKey = false;
 
     /**
-     * Guzzle Client
-     *
-     * @var Client
+     * @var AntennaRequester
      */
-    protected $guzzleClient;
-
-    /**
-     * HTTP to send Headers
-     *
-     * @var array
-     */
-    protected $headers = [];
+    private $requester;
 
     /**
      * OneSignalConsumer constructor.
-     *
-     * @param Client $guzzleClient
+     * @param AntennaRequester $requester
      */
-    function __construct(Client $guzzleClient)
+    public function __construct(AntennaRequester $requester)
     {
-        $this->guzzleClient = $guzzleClient;
+        $this->requester = $requester;
     }
 
     /**
@@ -169,28 +143,29 @@ class OneSignalConsumer
             'chrome_key' => false
         ];
 
-        $this->validateData($fields, $data);
-        $this->addUserKey();
+        $this->assertData($fields, $data);
 
-        return $this->post('apps', $data);
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->post('apps', $data);
     }
 
     /**
-     * Creates a new OneSignal APP.
-     *
-     * @param array $data Data APP
+     * Get an specified OneSignal APP.
      *
      * @return Object
      */
     public function getApp()
     {
-        $this->assetHasAppData();
-        $this->addUserKey();
-        return $this->get('apps/'.$this->appId);
+        $this->assertHasAppData();
+
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->get('apps/'.$this->appId);
     }
 
     /**
-     * Creates a new OneSignal APP.
+     * Updates OneSignal APP.
      *
      * @param array $data Data APP
      *
@@ -198,14 +173,12 @@ class OneSignalConsumer
      */
     public function updateApp($data)
     {
-        $this->assetHasAppData();
-        $this->addUserKey();
-        return $this->put('apps/'.$this->appId, $data);
-    }
+        $this->assertHasAppData();
 
-//**********************************
-//          INTERAL FUNCTIONS
-//**********************************
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->put('apps/'.$this->appId, $data);
+    }
 
     /**
      * Validate if we have the minimum required data
@@ -214,10 +187,9 @@ class OneSignalConsumer
      * @param $data
      *
      * @throws MissingOneSignalData
-     *
-     * @return OneSignalConsumer
+     * @return $this
      */
-    private function validateData($fields, $data)
+    private function assertData($fields, $data)
     {
         foreach ($fields AS $param => $required) {
             if ($required && !array_key_exists($param, $data)) {
@@ -229,140 +201,15 @@ class OneSignalConsumer
     }
 
     /**
-     * Checks if User Key is set.
-     *
-     * If there is not a user key this method will throw an exception.
-     *
-     * If is there, then, will add the proper header
-     *
-     * @throws MissingUserKeyRequired
-     *
-     * @return OneSignalConsumer
+     * @return $this
+     * @throws MissingOneSignalAppInformation
      */
-    public function addUserKey()
-    {
-        if (!$this->userKey) {
-            throw new MissingUserKeyRequired();
-        }
-
-        $this->headers['headers']['Authorization'] = 'Basic ' . $this->userKey;
-
-        return $this;
-    }
-
-    /**
-     * Check if app is load.
-     *
-     * If there is not a app this method will throw an exception.
-     *
-     * If is there, then, will add the proper header
-     *
-     * @throws MissingUserKeyRequired
-     *
-     * @return OneSignalConsumer
-     */
-    public function addAppKey()
+    private function assertHasAppData()
     {
         if (!$this->appId || !$this->appKey) {
-            throw new MissingUserKeyRequired();
+            throw new MissingOneSignalAppInformation();
         }
-
-        $this->headers['headers']['Authorization'] = 'Basic ' . $this->appKey;
 
         return $this;
-    }
-
-    /**
-     * Sometimes, you need app data (For example app id in getApp function) but you don't want add appKey.
-     *
-     * In this moment you can use this method.
-     *
-     * @throws MissingUserKeyRequired
-     */
-    public function assetHasAppData()
-    {
-        if (!$this->appId || !$this->appKey) {
-            throw new MissingUserKeyRequired();
-        }
-    }
-
-//**********************************
-//        REQUEST METHODS
-//**********************************
-    /**
-     * Make a POST request.
-     *
-     * @param $endpoint
-     * @param $data
-     *
-     * @return object
-     */
-    public function post($endpoint, $data)
-    {
-        $this->headers['Content-Type'] = 'application/json';
-        $this->headers['json'] = $data;
-
-        return $this->makeRequest($endpoint,'post');
-    }
-
-    /**
-     * Make a PUT request.
-     *
-     * @param $endpoint
-     * @param $data
-     *
-     * @return object
-     */
-    public function put($endpoint, $data)
-    {
-        $this->headers['Content-Type'] = 'application/json';
-        $this->headers['json'] = $data;
-
-        return $this->makeRequest($endpoint,'put');
-    }
-
-    /**
-     * Make a get request
-     *
-     * @param $endpoint
-     *
-     * @return object
-     */
-    public function get($endpoint)
-    {
-        return $this->makeRequest($endpoint,'get');
-    }
-
-    /**
-     * Make a HTTP request and parse response
-     *
-     * @param $endpoint
-     * @param $method
-     *
-     * @return object
-     */
-    private function makeRequest($endpoint,$method)
-    {
-        try {
-            $request = $this->guzzleClient->{$method}(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
-                $this->headers);
-            return $this->processResponse($request);
-        } catch (RequestException $e) {
-            return $this->processResponse($e->getResponse());
-        }
-    }
-
-    /**
-     * Process response
-     *
-     * @param $request
-     *
-     * @return object
-     */
-    public function processResponse($request)
-    {
-        $response = json_decode($request->getBody()->getContents());
-        $this->headers = [];
-        return $response;
     }
 }
