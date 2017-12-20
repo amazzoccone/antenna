@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            \Bondacom\antenna\Providers\AntennsServiceProvider::class
+            \Bondacom\antenna\Providers\AntennaServiceProvider::class
         ];
     }
 

@@ -13,24 +13,27 @@ class SignalAppTest extends TestCase
      */
     public function it_creates_a_one_signal_model_successfully()
     {
-        $obj = new stdClass();
+        $obj = new \stdClass();
         $obj->id = random_int(1, 9999);
         $obj->basic_auth_key = str_random();
 
-        $this->mock(OneSignalConsumer::class)
-            ->shouldReceive('createApp')
+        $mock = $this->mock(OneSignalConsumer::class);
+        $mock->shouldReceive('createApp')
             ->once()
             ->andReturn($obj);
+        $mock->shouldReceive('setApp')
+            ->once();
+        $mock->shouldReceive('setUserKey')
+            ->twice();
+        $mock->shouldReceive('getAppKey')
+            ->once()
+            ->andReturn(str_random());
 
         $app = AntennaBuilder::create([
             'name' => 'Testing One Signal Application',
-            'gcm_key' => env('ANDROID_PUSH_API_KEY'),
-            'apns_env' => env('IOS_PUSH_ENVIRONMENT', ''),
-            'apns_p12_password' => env('IOS_P12_PASSWORD', ''),
             'chrome_web_origin' => 'https://example.com',
         ]);
 
         $this->assertInstanceOf(SignalApp::class, $app);
-        
     }
 }
