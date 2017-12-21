@@ -36,8 +36,7 @@
         "Bondacom\\antenna\\Providers\\AntennaServiceProvider"
       ],
       "aliases": {
-        "AntennaBuilder": "Bondacom\\antenna\\Facades\\AntennaBuilder",
-        "SignalApp": "Bondacom\\antenna\\Facades\\SignalApp"
+        "Antenna": "Bondacom\\antenna\\Facades\\Antenna",
       }
     }
   }
