@@ -35,10 +35,10 @@ php artisan vendor:publish --provider="Bondacom\antenna\Providers\AntennaService
 
 It's really simple!
 
-**Example** - create a One Signal App:
+**Example** - create an App:
 
 ```
-$app = AntennaBuilder::create([
+$app = Antenna::create([
     'name' => 'Testing One Signal Application',
     'gcm_key' => env('ANDROID_PUSH_API_KEY'),
     'apns_env' => env('IOS_PUSH_ENVIRONMENT', ''),
@@ -49,16 +49,33 @@ $app = AntennaBuilder::create([
 ]);
 ```
 
-**Example** - update One Signal App
+**Example** - Get an app based on default config
 
 ```
-$app = SignalApp::get([
-    'id' => {{app_id}},
-    'key' => {{auth_key}}
-]);
+$app = Antenna::app();
+```
 
-$app->chrome_web_origin = 'https://example.com';
-$app->save()
+**Example** - Get an app based on config by name
+
+```
+$app = Antenna::app('myapp');
+```
+
+**Example** - Get an app from custom creds
+
+```
+$app = Antenna::app([
+    'id' => {yourId},
+    'key' => {yourKey}
+]);
+```
+
+**Example** - Update an app
+
+```
+$app = Antenna::app();
+$app->name = 'New Name';
+$app->save();
 ```
 
 ## Contributing to Antenna
