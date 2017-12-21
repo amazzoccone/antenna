@@ -1,8 +1,8 @@
 <?php
 
-namespace Bondacom\antenna;
+namespace Bondacom\Antenna;
 
-use Bondacom\antenna\Exceptions\MissingUserKeyRequired;
+use Bondacom\Antenna\Exceptions\MissingUserKeyRequired;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 

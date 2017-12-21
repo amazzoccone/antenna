@@ -1,6 +1,6 @@
 <?php
 
-namespace Bondacom\antenna;
+namespace Bondacom\Antenna;
 
 class Antenna 
 {

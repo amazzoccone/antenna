@@ -1,12 +1,12 @@
 <?php
 
-namespace Bondacom\antenna\Facades;
+namespace Bondacom\Antenna\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * Class Antenna
- * @see \Bondacom\antenna\Antenna
+ * @see \Bondacom\Antenna\Antenna
  *
  */
 class Antenna extends Facade

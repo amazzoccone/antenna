@@ -22,21 +22,21 @@
   },
   "autoload": {
     "psr-4": {
-      "Bondacom\\antenna\\" : "src/"
+      "Bondacom\\Antenna\\" : "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Bondacom\\antenna\\Tests\\": "tests/"
+      "Bondacom\\Antenna\\Tests\\": "tests/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Bondacom\\antenna\\Providers\\AntennaServiceProvider"
+        "Bondacom\\Antenna\\Providers\\AntennaServiceProvider"
       ],
       "aliases": {
-        "Antenna": "Bondacom\\antenna\\Facades\\Antenna"
+        "Antenna": "Bondacom\\Antenna\\Facades\\Antenna"
       }
     }
   }

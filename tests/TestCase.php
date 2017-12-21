@@ -1,8 +1,8 @@
 <?php
 
-namespace Bondacom\antenna\Tests;
+namespace Bondacom\Antenna\Tests;
 
-use Bondacom\antenna\AntennaRequester;
+use Bondacom\Antenna\AntennaRequester;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -21,7 +21,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            \Bondacom\antenna\Providers\AntennaServiceProvider::class
+            \Bondacom\Antenna\Providers\AntennaServiceProvider::class
         ];
     }
 

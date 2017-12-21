@@ -1,6 +1,6 @@
 <?php
 
-namespace Bondacom\antenna\Exceptions;
+namespace Bondacom\Antenna\Exceptions;
 
 use Throwable;
 

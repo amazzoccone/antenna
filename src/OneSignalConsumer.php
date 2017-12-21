@@ -1,9 +1,9 @@
 <?php
 
-namespace Bondacom\antenna;
+namespace Bondacom\Antenna;
 
-use Bondacom\antenna\Exceptions\MissingOneSignalAppInformation;
-use Bondacom\antenna\Exceptions\MissingOneSignalData;
+use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
+use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class OneSignalConsumer implements ConsumerInterface
 {
