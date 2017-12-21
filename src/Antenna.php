@@ -24,9 +24,9 @@ class Antenna
      */
     public function app($config = null)
     {
-        $config = $this->config($config);
+        $creds = $this->config($config);
 
-        return AntennaModel::find($config['id'], $config['key']);
+        return AntennaModel::find($creds['id'], $creds['key']);
     }
 
     /**
@@ -45,7 +45,7 @@ class Antenna
     private function config($config)
     {
         if (is_null($config)) {
-            return $this->config['default_app'];
+            $config = $this->config['default_app'];
         }
 
         return is_string($config) ? $this->config['apps'][$config] : $config;

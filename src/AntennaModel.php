@@ -72,9 +72,9 @@ class AntennaModel
             return $this;
         }
 
-        $result = $this->attributes['id'] ?
-            $this->consumer->update($this->attributes) :
-            $this->consumer->create($this->attributes);
+        $result = empty($this->attributes['id']) ?
+            $this->consumer->create($this->attributes) :
+            $this->consumer->update($this->attributes);
 
         if ($result === false) {
             throw new AntennaSaveException();
