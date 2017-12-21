@@ -3,8 +3,6 @@
 namespace Bondacom\antenna\Providers;
 
 use Bondacom\antenna\Antenna;
-use Bondacom\antenna\AntennaBuilder;
-use Bondacom\antenna\AntennaModel;
 use Bondacom\antenna\ConsumerInterface;
 use Bondacom\antenna\OneSignalConsumer;
 use Illuminate\Support\ServiceProvider;
@@ -30,9 +28,13 @@ class AntennaServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/antenna.php', 'antenna'
+        );
+
         $config = config('antenna');
 
-        $this->app->bind(Antenna::class, function ($app) use ($config) {
+        $this->app->bind('Antenna', function ($app) use ($config) {
             return new Antenna($config);
         });
 
