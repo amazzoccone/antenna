@@ -1,12 +1,12 @@
 <?php
 
-namespace Bondacom\Antenna;
+namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Exceptions\MissingUserKeyRequired;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
-class AntennaRequester
+class Requester
 {
     /**
      * One Signal Base URL

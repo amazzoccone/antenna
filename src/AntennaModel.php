@@ -2,6 +2,7 @@
 
 namespace Bondacom\Antenna;
 
+use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Exceptions\AntennaSaveException;
 
 class AntennaModel
@@ -32,7 +33,7 @@ class AntennaModel
      */
     public function __construct(array $attributes = [])
     {
-        $this->consumer = app(ConsumerInterface::class);
+        $this->consumer = app(DriverInterface::class);
 
         $this->fill($attributes);
     }
