@@ -9,13 +9,9 @@ class AntennaBuilder
      */
     protected $consumer;
 
-    /**
-     * @param string $userKey
-     */
-    public function __construct($userKey)
+    public function __construct()
     {
-        $this->consumer = app(OneSignalConsumer::class);
-        $this->consumer->setUserKey($userKey);
+        $this->consumer = app(ConsumerInterface::class);
     }
 
     /**
@@ -26,7 +22,6 @@ class AntennaBuilder
     {
         $creationResponse = $this->consumer->create($data);
         $app = new SignalApp($creationResponse->id, $creationResponse->basic_auth_key, $creationResponse);
-        $app->setUserKey($this->consumer->getAppKey());
 
         return $app;
     }
