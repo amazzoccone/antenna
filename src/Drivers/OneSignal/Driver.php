@@ -2,6 +2,7 @@
 
 namespace Bondacom\Antenna\Drivers\OneSignal;
 
+use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
@@ -35,9 +36,9 @@ class Driver implements DriverInterface
 
     /**
      * OneSignalConsumer constructor.
-     * @param AntennaRequester $requester
+     * @param Requester $requester
      */
-    public function __construct(AntennaRequester $requester)
+    public function __construct(Requester $requester)
     {
         $this->requester = $requester;
     }
