@@ -2,6 +2,7 @@
 
 namespace Bondacom\antenna\Providers;
 
+use Bondacom\antenna\Antenna;
 use Bondacom\antenna\AntennaBuilder;
 use Bondacom\antenna\AntennaModel;
 use Bondacom\antenna\ConsumerInterface;
@@ -19,7 +20,7 @@ class AntennaServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/antenna.php' => config_path('antenna.php'),
-        ], 'config');
+        ]);
     }
 
     /**
@@ -31,13 +32,8 @@ class AntennaServiceProvider extends ServiceProvider
     {
         $config = config('antenna');
 
-        $this->app->singleton('AntennaBuilder', function ($app) use ($config) {
-            return new AntennaBuilder();
-        });
-
-        $this->app->singleton('SignalApp', function ($app) use ($config) {
-            $appConfig = $config['apps'][$config['default_app']];
-            return new AntennaModel($appConfig['id'], $appConfig['key']);
+        $this->app->bind(Antenna::class, function ($app) use ($config) {
+            return new Antenna($config);
         });
 
         $this->app->bind(ConsumerInterface::class, function ($app) use ($config) {
