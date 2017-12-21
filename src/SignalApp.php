@@ -60,15 +60,4 @@ class SignalApp extends AntennaModel
             return $signalApp;
         }
     }
-
-    /**
-     * @param array $data
-     * @return SignalApp
-     */
-    public static function create(array $data)
-    {
-        $model = new static($data);
-        $model->save();
-        return $model;
-    }
 }
