@@ -14,13 +14,6 @@ class AntennaModel
     protected $attributes = [];
 
     /**
-     * Check if we must go to server to get the model information
-     *
-     * @var bool
-     */
-    protected $isLoad = false;
-
-    /**
      * @var Consumer
      */
     protected $consumer;
@@ -33,52 +26,81 @@ class AntennaModel
     protected $isDirty = false;
 
     /**
-     * AntennaModel constructor.
+     * Signal constructor.
      *
-     * @param ConsumerInterface $consumer
+     * @param array $attributes
      */
-    function __construct(ConsumerInterface $consumer)
+    public function __construct(array $attributes = [])
     {
-        $this->consumer = $consumer;
+        $this->consumer = app(ConsumerInterface::class);
+
+        $this->fill($attributes);
     }
 
     /**
-     * Get an attribute from the model.
-     *
-     * @param  string $key
-     * @return mixed
-     */
-    private function getAttribute($key)
-    {
-        if (!$key) {
-            return;
-        }
-
-        // If we have it we will return it (For example ID is mandatory to instance SignalApp Model)
-        if (isset($this->attributes[$key])) {
-            return $this->attributes[$key];
-        }
-
-        // If we don't have this attribute, and object is not loaded, then, we will load the object
-        if ((empty($this->attributes) OR !isset($this->attributes[$key])) AND !$this->isLoad) {
-            $this->load();
-        }
-
-        // Now, we have the OnSignal data, if there is the required attribute, then access to this.
-        if (isset($this->attributes[$key])) {
-            return $this->attributes[$key];
-        }
-    }
-
-    /**
+     * @param $id
      * @param $key
-     * @param $value
+     * @return $this|SignalApp
+     */
+    public static function find($id, $key)
+    {
+        $model = new self();
+        $model->consumer->setApp($id, $key);
+        $model->refresh();
+
+        return $model;
+    }
+
+    /**
+     * @param array $data
+     * @return SignalApp
+     */
+    public static function create(array $data)
+    {
+        $model = new self($data);
+        $model->save();
+
+        return $model;
+    }
+
+    /**
+     * Persists attributes from server
+     */
+    public function save()
+    {
+        if (!$this->isDirty) {
+            return $this;
+        }
+
+        $result = empty($this->attributes['id']) ?
+            $this->consumer->create($this->attributes) :
+            $this->consumer->update($this->attributes);
+
+        if ($result === false) {
+            throw new AntennaSaveException();
+        }
+
+        $this->fill($result);
+        $this->isDirty = false;
+
+        return $this;
+    }
+
+    /**
+     * Reload the current model instance with fresh attributes from the server.
+     *
      * @return $this
      */
-    private function setAttribute($key, $value)
+    public function refresh()
     {
-        $this->attributes[$key] = $value;
-        $this->isDirty = true;
+        $data = $this->consumer->get();
+
+        if (empty($data)) { //Isn't an error?
+            return $this;
+        }
+
+        $this->fill($data);
+        $this->isDirty = false;
 
         return $this;
     }
@@ -107,34 +129,33 @@ class AntennaModel
     }
 
     /**
-     * Get attributes from OneSignal server
+     * Get an attribute from the model.
+     *
+     * @param  string $key
+     * @return mixed
      */
-    private function load()
+    private function getAttribute($key)
     {
-        $this->loadFromMetadata($this->consumer->get());
-        $this->isLoad = true;
+        if (!$key) {
+            return;
+        }
+
+        // If we have it we will return it
+        if (isset($this->attributes[$key])) {
+            return $this->attributes[$key];
+        }
     }
 
-
     /**
-     * Persists attributes from server
+     * @param $key
+     * @param $value
+     * @return $this
      */
-    public function save()
+    private function setAttribute($key, $value)
     {
-        if (!$this->isDirty) {
-            return $this;
-        }
+        $this->attributes[$key] = $value;
+        $this->isDirty = true;
 
-        $result = $this->attributes['id'] ?
-            $this->consumer->update($this->attributes) :
-            $this->consumer->create($this->attributes);
-
-        if (isset($result->errors)) {
-            throw new AntennaSaveException(implode(",", $result->errors));
-        }
-
-        $this->loadFromMetadata($result);
-        $this->isDirty = false;
         return $this;
     }
 
@@ -143,32 +164,11 @@ class AntennaModel
      * @param $data
      * @return $this
      */
-    private function fillObject($data)
+    private function fill($data)
     {
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
-
-        return $this;
-    }
-
-    /**
-     * If you have all the information for any reason, and don't need go to OneSignal server, then, you can use it.
-     *
-     * WARNING: CALL IT JUST IF YOU ARE SURE THAT YOU HAVE THE MOST RECENT INFORMATION (FOR EXAMPLE, AFTER CREATION)
-     *
-     * @param $data
-     * @return $this
-     */
-    public function loadFromMetadata($data)
-    {
-        if (empty($data)) {
-            return $this;
-        }
-
-        $this->fillObject($data);
-        $this->isLoad = true;
-        $this->isDirty = false;
 
         return $this;
     }

@@ -5,11 +5,11 @@ namespace Bondacom\antenna\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class AntennaBuilder
- * @see \Bondacom\antenna\AntennaBuilder
+ * Class Antenna
+ * @see \Bondacom\antenna\Antenna
  *
  */
-class AntennaBuilder extends Facade
+class Antenna extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -18,6 +18,6 @@ class AntennaBuilder extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'AntennaBuilder';
+        return 'Antenna';
     }
 }

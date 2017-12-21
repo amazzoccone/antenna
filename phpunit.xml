@@ -14,4 +14,9 @@
             <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="ONESIGNAL_APP_ID" value="78464239232"/>
+        <env name="ONESIGNAL_APP_KEY" value="sndjid73dk37d"/>
+        <env name="ONESIGNAL_USER_KEY" value="DSdbhaJASfa23SA82Sa"/>
+    </php>
 </phpunit>

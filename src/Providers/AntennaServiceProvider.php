@@ -2,10 +2,9 @@
 
 namespace Bondacom\antenna\Providers;
 
-use Bondacom\antenna\AntennaBuilder;
+use Bondacom\antenna\Antenna;
 use Bondacom\antenna\ConsumerInterface;
 use Bondacom\antenna\OneSignalConsumer;
-use Bondacom\antenna\SignalApp;
 use Illuminate\Support\ServiceProvider;
 
 class AntennaServiceProvider extends ServiceProvider
@@ -19,7 +18,7 @@ class AntennaServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/antenna.php' => config_path('antenna.php'),
-        ], 'config');
+        ]);
     }
 
     /**
@@ -29,16 +28,14 @@ class AntennaServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/antenna.php', 'antenna'
+        );
+
         $config = config('antenna');
 
-        $this->app->singleton('AntennaBuilder', function ($app) use ($config) {
-            return new AntennaBuilder();
-        });
-
-        $this->app->singleton('SignalApp', function ($app) use ($config) {
-            $app = $config['apps'][$config['default_app']];
-            $signalApp = new SignalApp($app['id'], $app['key']);
-            return $signalApp;
+        $this->app->bind('Antenna', function ($app) use ($config) {
+            return new Antenna($config);
         });
 
         $this->app->bind(ConsumerInterface::class, function ($app) use ($config) {
