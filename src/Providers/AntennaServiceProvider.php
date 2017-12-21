@@ -1,10 +1,10 @@
 <?php
 
-namespace Bondacom\antenna\Providers;
+namespace Bondacom\Antenna\Providers;
 
-use Bondacom\antenna\Antenna;
-use Bondacom\antenna\ConsumerInterface;
-use Bondacom\antenna\OneSignalConsumer;
+use Bondacom\Antenna\Antenna;
+use Bondacom\Antenna\ConsumerInterface;
+use Bondacom\Antenna\OneSignalConsumer;
 use Illuminate\Support\ServiceProvider;
 
 class AntennaServiceProvider extends ServiceProvider

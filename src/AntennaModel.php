@@ -1,8 +1,8 @@
 <?php
 
-namespace Bondacom\antenna;
+namespace Bondacom\Antenna;
 
-use Bondacom\antenna\Exceptions\AntennaSaveException;
+use Bondacom\Antenna\Exceptions\AntennaSaveException;
 
 class AntennaModel
 {

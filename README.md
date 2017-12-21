@@ -28,7 +28,7 @@ composer require Bondacom/Antenna
 ### Configuration
 Copy the config file into your project by running
 ```
-php artisan vendor:publish --provider="Bondacom\antenna\Providers\AntennaServiceProvider"
+php artisan vendor:publish --provider="Bondacom\Antenna\Providers\AntennaServiceProvider"
 ```
 
 ### Usage

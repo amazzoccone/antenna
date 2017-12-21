@@ -1,8 +1,8 @@
 <?php
 
-namespace Bondacom\antenna\Tests;
+namespace Bondacom\Antenna\Tests;
 
-use Bondacom\antenna\AntennaModel;
+use Bondacom\Antenna\AntennaModel;
 
 class AntennaModelTest extends TestCase
 {
