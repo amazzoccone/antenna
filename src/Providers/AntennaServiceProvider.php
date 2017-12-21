@@ -3,9 +3,9 @@
 namespace Bondacom\antenna\Providers;
 
 use Bondacom\antenna\AntennaBuilder;
+use Bondacom\antenna\AntennaModel;
 use Bondacom\antenna\ConsumerInterface;
 use Bondacom\antenna\OneSignalConsumer;
-use Bondacom\antenna\SignalApp;
 use Illuminate\Support\ServiceProvider;
 
 class AntennaServiceProvider extends ServiceProvider
@@ -36,9 +36,8 @@ class AntennaServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('SignalApp', function ($app) use ($config) {
-            $app = $config['apps'][$config['default_app']];
-            $signalApp = new SignalApp($app['id'], $app['key']);
-            return $signalApp;
+            $appConfig = $config['apps'][$config['default_app']];
+            return new AntennaModel($appConfig['id'], $appConfig['key']);
         });
 
         $this->app->bind(ConsumerInterface::class, function ($app) use ($config) {

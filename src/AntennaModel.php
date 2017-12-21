@@ -33,13 +33,89 @@ class AntennaModel
     protected $isDirty = false;
 
     /**
-     * AntennaModel constructor.
+     * Signal constructor.
      *
-     * @param ConsumerInterface $consumer
+     * @param string $appID OneSignal APP ID
+     * @param string $appKey OneSignal APP Key
+     * @param array $metaData If you have all the information, can send metadata in order to avoid make a new call. This is a optional parameter.
      */
-    function __construct(ConsumerInterface $consumer)
+    public function __construct($appID, $appKey, $metaData = [])
     {
-        $this->consumer = $consumer;
+        $this->consumer = app(ConsumerInterface::class);
+        $this->consumer->setApp($appID, $appKey);
+
+        $this->id = $appID;
+        $this->basic_auth_key = $appKey;
+        $this->loadFromMetadata($metaData);
+    }
+
+    /**
+     * @param $id
+     * @param $key
+     * @return $this|SignalApp
+     */
+    public static function find($id, $key)
+    {
+        $model = new self($id, $key);
+        $model->load();
+        return $model;
+    }
+
+    /**
+     * @param array $data
+     * @return SignalApp
+     */
+    public static function create(array $data)
+    {
+        $model = new self($data);
+        $model->save();
+
+        return $model;
+    }
+
+    /**
+     * Persists attributes from server
+     */
+    public function save()
+    {
+        if (!$this->isDirty) {
+            return $this;
+        }
+
+        $result = $this->attributes['id'] ?
+            $this->consumer->update($this->attributes) :
+            $this->consumer->create($this->attributes);
+
+        if (isset($result->errors)) {
+            throw new AntennaSaveException(implode(",", $result->errors));
+        }
+
+        $this->loadFromMetadata($result);
+        $this->isDirty = false;
+        return $this;
+    }
+
+    /**
+     * Dynamically retrieve attributes on the model.
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->getAttribute($key);
+    }
+
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        $this->setAttribute($key, $value);
     }
 
     /**
@@ -84,58 +160,12 @@ class AntennaModel
     }
 
     /**
-     * Dynamically retrieve attributes on the model.
-     *
-     * @param  string $key
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->getAttribute($key);
-    }
-
-    /**
-     * Dynamically set attributes on the model.
-     *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function __set($key, $value)
-    {
-        $this->setAttribute($key, $value);
-    }
-
-    /**
      * Get attributes from OneSignal server
      */
     private function load()
     {
         $this->loadFromMetadata($this->consumer->get());
         $this->isLoad = true;
-    }
-
-
-    /**
-     * Persists attributes from server
-     */
-    public function save()
-    {
-        if (!$this->isDirty) {
-            return $this;
-        }
-
-        $result = $this->attributes['id'] ?
-            $this->consumer->update($this->attributes) :
-            $this->consumer->create($this->attributes);
-
-        if (isset($result->errors)) {
-            throw new AntennaSaveException(implode(",", $result->errors));
-        }
-
-        $this->loadFromMetadata($result);
-        $this->isDirty = false;
-        return $this;
     }
 
     /**
@@ -160,7 +190,7 @@ class AntennaModel
      * @param $data
      * @return $this
      */
-    public function loadFromMetadata($data)
+    private function loadFromMetadata($data)
     {
         if (empty($data)) {
             return $this;
