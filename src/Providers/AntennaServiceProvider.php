@@ -3,8 +3,8 @@
 namespace Bondacom\Antenna\Providers;
 
 use Bondacom\Antenna\Antenna;
-use Bondacom\Antenna\ConsumerInterface;
-use Bondacom\Antenna\OneSignalConsumer;
+use Bondacom\Antenna\Drivers\DriverInterface;
+use Bondacom\Antenna\Drivers\OneSignal\Driver;
 use Illuminate\Support\ServiceProvider;
 
 class AntennaServiceProvider extends ServiceProvider
@@ -38,8 +38,8 @@ class AntennaServiceProvider extends ServiceProvider
             return new Antenna($config);
         });
 
-        $this->app->bind(ConsumerInterface::class, function ($app) use ($config) {
-            $consumer = app(OneSignalConsumer::class);
+        $this->app->bind(DriverInterface::class, function ($app) use ($config) {
+            $consumer = app(Driver::class);
             $consumer->setUserKey($config['userKey']);
             return $consumer;
         });

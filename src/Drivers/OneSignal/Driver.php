@@ -1,11 +1,11 @@
 <?php
 
-namespace Bondacom\Antenna;
+namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
-class OneSignalConsumer implements ConsumerInterface
+class Driver implements DriverInterface
 {
     /**
      * OneSignal USER AUTH KEY (https://onesignal.com/users/me)

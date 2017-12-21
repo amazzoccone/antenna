@@ -2,7 +2,7 @@
 
 namespace Bondacom\Antenna\Tests;
 
-use Bondacom\Antenna\AntennaRequester;
+use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -47,7 +47,7 @@ abstract class TestCase extends BaseTestCase
         $obj->name = 'Testing';
         $obj->basic_auth_key = str_random();
 
-        $mock = $this->mock(AntennaRequester::class)->makePartial();
+        $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->andReturn($obj);
         $mock->shouldReceive('put')->andReturn($obj);
         $mock->shouldReceive('post')->andReturn($obj);

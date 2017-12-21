@@ -1,8 +1,8 @@
 <?php
 
-namespace Bondacom\Antenna;
+namespace Bondacom\Antenna\Drivers;
 
-interface ConsumerInterface
+interface DriverInterface
 {
     /**
      * @param $data
