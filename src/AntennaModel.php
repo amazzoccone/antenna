@@ -37,6 +37,14 @@ class AntennaModel
     }
 
     /**
+     * @return DriverInterface
+     */
+    public function driver()
+    {
+        return $this->driver;
+    }
+
+    /**
      * @param $id
      * @param $key
      * @return AntennaModel
