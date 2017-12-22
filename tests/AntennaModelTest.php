@@ -80,4 +80,35 @@ class AntennaModelTest extends TestCase
         $this->expectException(AntennaSaveException::class);
         $app->save();
     }
+
+    /**
+     * @test
+     */
+    public function getAttributes_method_returns_all_attributes()
+    {
+        $data = $this->fakeRequesterData();
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('setUserKey')->andReturnSelf();
+
+        $app = AntennaModel::find(random_int(1, 9999), str_random());
+        $attributes = $app->getAttributes();
+
+        $this->assertEquals($data, $attributes);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_attribute()
+    {
+        $data = $this->fakeRequesterData();
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('setUserKey')->andReturnSelf();
+
+        $app = AntennaModel::find(random_int(1, 9999), str_random());
+        $this->assertEquals($data['id'], $app->id);
+        $this->assertEquals($data['name'], $app->name);
+    }
 }
