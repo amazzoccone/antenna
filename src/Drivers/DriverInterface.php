@@ -6,18 +6,18 @@ interface DriverInterface
 {
     /**
      * @param $data
-     * @return mixed
+     * @return array
      */
     public function create($data);
 
     /**
-     * @return mixed
+     * @return array
      */
     public function get();
 
     /**
      * @param $data
-     * @return mixed
+     * @return array
      */
     public function update($data);
 }
