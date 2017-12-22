@@ -41,7 +41,6 @@ class Requester
     }
 
     /**
-     *
      * @param string $key
      * @return $this
      * @throws MissingUserKeyRequired
@@ -58,14 +57,11 @@ class Requester
     }
 
     /**
-     * Make a POST request.
-     *
-     * @param $endpoint
+     * @param string $endpoint
      * @param $data
-     *
-     * @return object
+     * @return array
      */
-    public function post($endpoint, $data)
+    public function post(string $endpoint, $data)
     {
         $this->headers['Content-Type'] = 'application/json';
         $this->headers['json'] = $data;
@@ -74,14 +70,11 @@ class Requester
     }
 
     /**
-     * Make a PUT request.
-     *
-     * @param $endpoint
+     * @param string $endpoint
      * @param $data
-     *
-     * @return object
+     * @return array
      */
-    public function put($endpoint, $data)
+    public function put(string $endpoint, $data)
     {
         $this->headers['Content-Type'] = 'application/json';
         $this->headers['json'] = $data;
@@ -90,30 +83,24 @@ class Requester
     }
 
     /**
-     * Make a get request
-     *
-     * @param $endpoint
-     *
-     * @return object
+     * @param string $endpoint
+     * @return array
      */
-    public function get($endpoint)
+    public function get(string $endpoint)
     {
         return $this->makeRequest($endpoint,'get');
     }
 
     /**
-     * Make a HTTP request and parse response
-     *
-     * @param $endpoint
-     * @param $method
-     *
-     * @return object
+     * @param string $endpoint
+     * @param string $method
+     * @return array
      */
-    private function makeRequest($endpoint,$method)
+    private function makeRequest(string $endpoint, string $method)
     {
         try {
-            $request = $this->guzzleClient->{$method}(self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint,
-                $this->headers);
+            $uri = self::BASE_URL . "/" . self::API_VERSION . '/' . $endpoint;
+            $request = $this->guzzleClient->{$method}($uri, $this->headers);
             return $this->processResponse($request);
         } catch (RequestException $e) {
             return $this->processResponse($e->getResponse());
@@ -121,15 +108,12 @@ class Requester
     }
 
     /**
-     * Process response
-     *
      * @param $request
-     *
-     * @return object
+     * @return array
      */
     private function processResponse($request)
     {
         $this->headers = [];
-        return json_decode($request->getBody()->getContents());
+        return json_decode($request->getBody()->getContents(), true);
     }
 }

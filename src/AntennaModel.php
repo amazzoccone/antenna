@@ -8,45 +8,51 @@ use Bondacom\Antenna\Exceptions\AntennaSaveException;
 class AntennaModel
 {
     /**
-     * Model attributes
-     *
      * @var array
      */
     protected $attributes = [];
 
     /**
-     * @var Consumer
+     * @var DriverInterface
      */
-    protected $consumer;
+    protected $driver;
 
     /**
-     * Check if we must go to OneSignal server to update it.
+     * Check if must go to the server to update it.
      *
      * @var bool
      */
     protected $isDirty = false;
 
     /**
-     * Signal constructor.
+     * AntennaModel constructor.
      *
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
-        $this->consumer = app(DriverInterface::class);
+        $this->driver = app(DriverInterface::class);
 
         $this->fill($attributes);
     }
 
     /**
+     * @return DriverInterface
+     */
+    public function driver()
+    {
+        return $this->driver;
+    }
+
+    /**
      * @param $id
      * @param $key
-     * @return $this|SignalApp
+     * @return AntennaModel
      */
     public static function find($id, $key)
     {
         $model = new self();
-        $model->consumer->setApp($id, $key);
+        $model->driver->setApp($id, $key);
         $model->refresh();
 
         return $model;
@@ -54,7 +60,7 @@ class AntennaModel
 
     /**
      * @param array $data
-     * @return SignalApp
+     * @return AntennaModel
      */
     public static function create(array $data)
     {
@@ -65,7 +71,8 @@ class AntennaModel
     }
 
     /**
-     * Persists attributes from server
+     * @return $this
+     * @throws AntennaSaveException
      */
     public function save()
     {
@@ -74,11 +81,11 @@ class AntennaModel
         }
 
         $result = empty($this->attributes['id']) ?
-            $this->consumer->create($this->attributes) :
-            $this->consumer->update($this->attributes);
+            $this->driver->create($this->attributes) :
+            $this->driver->update($this->attributes);
 
-        if ($result === false) {
-            throw new AntennaSaveException();
+        if (array_key_exists('errors', $result)) {
+            throw new AntennaSaveException(implode(', ', $result['errors']));
         }
 
         $this->fill($result);
@@ -94,7 +101,7 @@ class AntennaModel
      */
     public function refresh()
     {
-        $data = $this->consumer->get();
+        $data = $this->driver->get();
 
         if (empty($data)) { //Isn't an error?
             return $this;
@@ -130,6 +137,14 @@ class AntennaModel
     }
 
     /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
      * Get an attribute from the model.
      *
      * @param  string $key
@@ -162,7 +177,7 @@ class AntennaModel
 
     /**
      *
-     * @param $data
+     * @param array $data
      * @return $this
      */
     private function fill($data)

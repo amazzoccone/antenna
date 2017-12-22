@@ -2,17 +2,11 @@
 
 namespace Bondacom\Antenna\Tests;
 
-use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->mockRequester();
-    }
+    protected $mockRequester;
 
     /**
      * @param $app
@@ -38,21 +32,16 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @return $this
+     * @param array $data
+     * @return array
      */
-    private function mockRequester()
+    protected function fakeRequesterData(array $data = [])
     {
-        $obj = new \stdClass();
-        $obj->id = random_int(1, 9999);
-        $obj->name = 'Testing';
-        $obj->basic_auth_key = str_random();
+        $id = random_int(1, 9999);
+        $name = 'Testing';
+        $basic_auth_key = str_random();
+        $fakeData = compact('id', 'name', 'basic_auth_key');
 
-        $mock = $this->mock(Requester::class)->makePartial();
-        $mock->shouldReceive('get')->andReturn($obj);
-        $mock->shouldReceive('put')->andReturn($obj);
-        $mock->shouldReceive('post')->andReturn($obj);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
-
-        return $this;
+        return array_merge($fakeData, $data);
     }
 }

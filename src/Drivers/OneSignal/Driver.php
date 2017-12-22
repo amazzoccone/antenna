@@ -102,13 +102,51 @@ class Driver implements DriverInterface
     }
 
     /**
-     * Creates a new OneSignal APP.
-     *
-     * @param array $data Data APP
-     *
-     * @return Object
+     * @param array $data
+     * @return array
      */
     public function create($data)
+    {
+        $this->assertDataCreation($data);
+
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->post('apps', $data);
+    }
+
+    /**
+     * @return array
+     */
+    public function get()
+    {
+        $this->assertHasAppData();
+
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->get('apps/'.$this->appId);
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function update($data)
+    {
+        $this->assertHasAppData();
+
+        return $this->requester
+            ->setUserKey($this->userKey)
+            ->put('apps/'.$this->appId, $data);
+    }
+
+    /**
+     * Validate if we have the minimum required data to create an app
+     *
+     * @param $data
+     * @throws MissingOneSignalData
+     * @return $this
+     */
+    private function assertDataCreation($data)
     {
         // For references about the fields go to https://documentation.onesignal.com/reference#create-an-app
         $fields = [
@@ -140,57 +178,9 @@ class Driver implements DriverInterface
             'chrome_key' => false
         ];
 
-        $this->assertData($fields, $data);
-
-        return $this->requester
-            ->setUserKey($this->userKey)
-            ->post('apps', $data);
-    }
-
-    /**
-     * Get an specified OneSignal APP.
-     *
-     * @return Object
-     */
-    public function get()
-    {
-        $this->assertHasAppData();
-
-        return $this->requester
-            ->setUserKey($this->userKey)
-            ->get('apps/'.$this->appId);
-    }
-
-    /**
-     * Updates OneSignal APP.
-     *
-     * @param array $data Data APP
-     *
-     * @return Object
-     */
-    public function update($data)
-    {
-        $this->assertHasAppData();
-
-        return $this->requester
-            ->setUserKey($this->userKey)
-            ->put('apps/'.$this->appId, $data);
-    }
-
-    /**
-     * Validate if we have the minimum required data
-     *
-     * @param $fields
-     * @param $data
-     *
-     * @throws MissingOneSignalData
-     * @return $this
-     */
-    private function assertData($fields, $data)
-    {
-        foreach ($fields AS $param => $required) {
-            if ($required && !array_key_exists($param, $data)) {
-                throw new MissingOneSignalData($param);
+        foreach ($fields as $key => $value) {
+            if ($value && !array_key_exists($key, $data)) {
+                throw new MissingOneSignalData($key);
             }
         }
 
