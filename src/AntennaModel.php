@@ -76,8 +76,8 @@ class AntennaModel
             $this->driver->create($this->attributes) :
             $this->driver->update($this->attributes);
 
-        if ($result === false) {
-            throw new AntennaSaveException();
+        if (array_key_exists('errors', $result)) {
+            throw new AntennaSaveException(implode(', ', $result['errors']));
         }
 
         $this->fill($result);
