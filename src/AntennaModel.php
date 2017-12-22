@@ -130,6 +130,14 @@ class AntennaModel
     }
 
     /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
      * Get an attribute from the model.
      *
      * @param  string $key
