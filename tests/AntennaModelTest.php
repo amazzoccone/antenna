@@ -5,6 +5,7 @@ namespace Bondacom\Antenna\Tests;
 use Bondacom\Antenna\AntennaModel;
 use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Bondacom\Antenna\Exceptions\AntennaSaveException;
+use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class AntennaModelTest extends TestCase
@@ -87,6 +88,15 @@ class AntennaModelTest extends TestCase
 
         $this->expectException(AntennaSaveException::class);
         $app->save();
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_exception_if_driver_has_not_required_app_information()
+    {
+        $this->expectException(MissingOneSignalAppInformation::class);
+        AntennaModel::find('', '');
     }
 
     /**
