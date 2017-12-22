@@ -3,6 +3,7 @@
 namespace Bondacom\Antenna\Tests;
 
 use Bondacom\Antenna\AntennaModel;
+use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Bondacom\Antenna\Facades\Antenna;
 
 class AntennaTest extends TestCase
@@ -12,6 +13,11 @@ class AntennaTest extends TestCase
      */
     public function app_method_returns_the_default_config_app()
     {
+        $data = $this->fakeRequesterData();
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('setUserKey')->andReturnSelf();
+
         $app = Antenna::app();
 
         $this->assertInstanceOf(AntennaModel::class, $app);
@@ -22,6 +28,11 @@ class AntennaTest extends TestCase
      */
     public function app_method_returns_a_config_app()
     {
+        $data = $this->fakeRequesterData();
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('setUserKey')->andReturnSelf();
+
         $app = Antenna::app('default');
 
         $this->assertInstanceOf(AntennaModel::class, $app);
@@ -32,6 +43,11 @@ class AntennaTest extends TestCase
      */
     public function app_method_returns_a_custom_config_app()
     {
+        $data = $this->fakeRequesterData();
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('setUserKey')->andReturnSelf();
+
         $app = Antenna::app([
             'id' => random_int(1, 99999),
             'key' => str_random()
