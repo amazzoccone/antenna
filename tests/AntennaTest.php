@@ -16,7 +16,6 @@ class AntennaTest extends TestCase
         $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = Antenna::app();
 
@@ -31,7 +30,6 @@ class AntennaTest extends TestCase
         $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = Antenna::app('default');
 
@@ -46,11 +44,27 @@ class AntennaTest extends TestCase
         $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = Antenna::app([
             'id' => random_int(1, 99999),
             'key' => str_random()
+        ]);
+
+        $this->assertInstanceOf(AntennaModel::class, $app);
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_an_app()
+    {
+        $data = $this->fakeRequesterData();
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('post')->once()->andReturn($data);
+
+        $app = Antenna::create([
+            'name' => 'Testing One Signal Application',
+            'chrome_web_origin' => 'https://example.com',
         ]);
 
         $this->assertInstanceOf(AntennaModel::class, $app);

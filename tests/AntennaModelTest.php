@@ -5,6 +5,7 @@ namespace Bondacom\Antenna\Tests;
 use Bondacom\Antenna\AntennaModel;
 use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Bondacom\Antenna\Exceptions\AntennaSaveException;
+use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class AntennaModelTest extends TestCase
 {
@@ -16,7 +17,6 @@ class AntennaModelTest extends TestCase
         $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = AntennaModel::find(random_int(1, 9999), str_random());
 
@@ -32,7 +32,6 @@ class AntennaModelTest extends TestCase
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
         $mock->shouldReceive('put')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = AntennaModel::find(random_int(1, 9999), str_random());
         $app->chrome_web_origin = 'https://example.com';
@@ -49,7 +48,6 @@ class AntennaModelTest extends TestCase
         $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('post')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = AntennaModel::create([
             'name' => 'Testing One Signal Application',
@@ -57,6 +55,17 @@ class AntennaModelTest extends TestCase
         ]);
 
         $this->assertInstanceOf(AntennaModel::class, $app);
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_exception_if_tries_to_create_an_app_but_not_have_required_fields()
+    {
+        $this->expectException(MissingOneSignalData::class);
+        AntennaModel::create([
+            'chrome_web_origin' => 'https://example.com',
+        ]);
     }
 
     /**
@@ -72,7 +81,6 @@ class AntennaModelTest extends TestCase
                 "Your API Key is incorrect. It should look something like: .."
             ]
         ]);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = AntennaModel::find(random_int(1, 9999), str_random());
         $app->gcm_key = 'dnudsijsd23';
@@ -89,7 +97,6 @@ class AntennaModelTest extends TestCase
         $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = AntennaModel::find(random_int(1, 9999), str_random());
         $attributes = $app->getAttributes();
@@ -105,7 +112,6 @@ class AntennaModelTest extends TestCase
         $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
-        $mock->shouldReceive('setUserKey')->andReturnSelf();
 
         $app = AntennaModel::find(random_int(1, 9999), str_random());
         $this->assertEquals($data['id'], $app->id);
