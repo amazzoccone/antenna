@@ -102,11 +102,8 @@ class Driver implements DriverInterface
     }
 
     /**
-     * Creates a new OneSignal APP.
-     *
-     * @param array $data Data APP
-     *
-     * @return Object
+     * @param array $data
+     * @return array
      */
     public function create($data)
     {
@@ -148,9 +145,7 @@ class Driver implements DriverInterface
     }
 
     /**
-     * Get an specified OneSignal APP.
-     *
-     * @return Object
+     * @return array
      */
     public function get()
     {
@@ -162,11 +157,8 @@ class Driver implements DriverInterface
     }
 
     /**
-     * Updates OneSignal APP.
-     *
-     * @param array $data Data APP
-     *
-     * @return Object
+     * @param array $data
+     * @return array
      */
     public function update($data)
     {
