@@ -4,6 +4,7 @@ namespace Bondacom\Antenna;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Exceptions\AntennaSaveException;
+use Bondacom\Antenna\Utilities\Notification;
 
 class AntennaModel
 {
@@ -37,6 +38,16 @@ class AntennaModel
     }
 
     /**
+     * @return Notification
+     */
+    public function notification()
+    {
+        $notification = app(Notification::class);
+        $notification->driver()->setApp();
+        return $notification;
+    }
+
+    /**
      * @return DriverInterface
      */
     public function driver()
@@ -66,6 +77,7 @@ class AntennaModel
     {
         $model = new self($data);
         $model->save();
+        $model->driver->setApp($model->id, $model->basic_auth_key);
 
         return $model;
     }

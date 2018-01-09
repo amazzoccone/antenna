@@ -20,11 +20,13 @@ class Notification
     }
 
     /**
+     * @param array $parameters
      * @return \Illuminate\Support\Collection
      */
-    public function all()
+    public function all(array $parameters = [])
     {
-        //
+        $data = $this->driver->all($parameters);
+        return collect($data);
     }
 
     /**
