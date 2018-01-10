@@ -16,12 +16,12 @@ abstract class Requester
     /**
      * @var Client
      */
-    protected $guzzleClient;
+    protected $client;
 
     /**
-     * @var array
+     * @var array (json data, query params, headers, etc)
      */
-    protected $headers = [];
+    protected $options = [];
 
     /**
      * @var string
@@ -30,11 +30,11 @@ abstract class Requester
 
     /**
      * AntennaRequester constructor.
-     * @param Client $guzzleClient
+     * @param Client $client
      */
-    public function __construct(Client $guzzleClient)
+    public function __construct(Client $client)
     {
-        $this->guzzleClient = $guzzleClient;
+        $this->client = $client;
     }
 
     /**
@@ -60,8 +60,8 @@ abstract class Requester
      */
     public function post(string $endpoint, $data)
     {
-        $this->headers['Content-Type'] = 'application/json';
-        $this->headers['json'] = $data;
+        $this->options['headers']['Content-Type'] = 'application/json';
+        $this->options['json'] = $data;
 
         return $this->makeRequest($endpoint,'post');
     }
@@ -73,18 +73,20 @@ abstract class Requester
      */
     public function put(string $endpoint, $data)
     {
-        $this->headers['Content-Type'] = 'application/json';
-        $this->headers['json'] = $data;
+        $this->options['Content-Type'] = 'application/json';
+        $this->options['json'] = $data;
 
         return $this->makeRequest($endpoint,'put');
     }
 
     /**
      * @param string $endpoint
+     * @param array $parameters
      * @return array
      */
-    public function get(string $endpoint)
+    public function get(string $endpoint, array $parameters = [])
     {
+        $this->options['query'] = $parameters;
         return $this->makeRequest($endpoint,'get');
     }
 
@@ -95,10 +97,11 @@ abstract class Requester
      */
     private function makeRequest(string $endpoint, string $method)
     {
+        $this->setAuthorizationHeader();
+        $uri = $this->url() . '/' . $endpoint;
+
         try {
-            $this->setAuthorizationHeader();
-            $uri = $this->url() . '/' . $endpoint;
-            $request = $this->guzzleClient->{$method}($uri, $this->headers);
+            $request = $this->client->request(strtoupper($method), $uri, $this->options);
             return $this->processResponse($request);
         } catch (RequestException $e) {
             return $this->processResponse($e->getResponse());
@@ -111,12 +114,12 @@ abstract class Requester
      */
     private function processResponse($request)
     {
-        $this->headers = [];
+        $this->options = [];
         return json_decode($request->getBody()->getContents(), true);
     }
 
     private function setAuthorizationHeader()
     {
-        $this->headers['headers']['Authorization'] = 'Basic ' . $this->key;
+        $this->options['headers']['Authorization'] = 'Basic ' . $this->key;
     }
 }
