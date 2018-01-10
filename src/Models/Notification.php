@@ -10,25 +10,11 @@ class Notification
     protected $attributes = [];
 
     /**
-     * @param array $parameters
-     * @return array
-     * @throws AntennaServerException
+     * @return \Bondacom\Antenna\Drivers\NotificationInterface
      */
-    public function all(array $parameters = []) : array
+    public static function newDriverInstance()
     {
-        //TODO: Move this to Model
-        return $this->driver->all($parameters, $this->appId);
-    }
-
-    /**
-     * @param string $id
-     * @return array
-     * @throws AntennaServerException
-     */
-    public function find(string $id) : array
-    {
-        //TODO: Move this to Model. find() should accept common parameters like a global scope
-        return $this->driver->find($id, $this->appId);
+        return app(DriverInterface::class)->notification();
     }
 
     /**
@@ -38,6 +24,16 @@ class Notification
      */
     public function cancel(string $id) : bool
     {
-        return $this->driver->canel($id, $this->appId);
+        return $this->driver->delete($id);
+    }
+
+    /**
+     * @return array
+     */
+    protected function scope()
+    {
+        return [
+            'app_id' => $this->attributes['app_id']
+        ];
     }
 }

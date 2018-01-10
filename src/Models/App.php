@@ -1,9 +1,8 @@
 <?php
 
-namespace Bondacom\Antenna;
+namespace Bondacom\Antenna\Models;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
-use Bondacom\Antenna\Models\Notification;
 
 class App
 {
@@ -23,9 +22,9 @@ class App
     }
 
     /**
-     * @return DriverInterface
+     * @return \Bondacom\Antenna\Drivers\AppInterface
      */
-    public function newDriverInstance()
+    public static function newDriverInstance()
     {
         return app(DriverInterface::class)->app();
     }

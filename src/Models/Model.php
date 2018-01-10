@@ -4,6 +4,7 @@ namespace Bondacom\Antenna;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Exceptions\AntennaServerException;
+use Illuminate\Support\Collection;
 
 abstract class Model
 {
@@ -39,7 +40,17 @@ abstract class Model
     /**
      * @return
      */
-    abstract public function newDriverInstance();
+    abstract public static function newDriverInstance();
+
+    /**
+     * @param array $parameters
+     * @return \Illuminate\Support\Collection
+     * @throws AntennaServerException
+     */
+    public static function all(array $parameters = [])
+    {
+        return self::newDriverInstance()->all($parameters);
+    }
 
     /**
      * @param $id
@@ -95,7 +106,7 @@ abstract class Model
      */
     public function refresh()
     {
-        $data = $this->driver->find($this->attributes['id']);
+        $data = $this->driver->find($this->attributes['id'], $this->scope());
 
         $this->fill($data);
         $this->isDirty = false;
@@ -177,5 +188,15 @@ abstract class Model
         }
 
         return $this;
+    }
+
+    /**
+     * Default parameters when request driver
+     *
+     * @return array
+     */
+    private function scope()
+    {
+        return [];
     }
 }
