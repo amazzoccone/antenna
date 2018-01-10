@@ -8,6 +8,7 @@ interface ModelInterface
      * @param array $parameters
      * @return array
      * @throws AntennaServerException
+     * TODO: Return a Collection instead of array
      */
     public function all(array $parameters = []) : array;
 

@@ -2,6 +2,7 @@
 
 namespace Bondacom\Antenna\Models;
 
+use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Utilities\Model;
 
 class Notification extends Model

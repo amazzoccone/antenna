@@ -27,7 +27,7 @@ class App extends Model
      */
     public function notification()
     {
-        return $this->belongsTo(self::class, [
+        return $this->hasMany(Notification::class, [
             'app_id' => $this->attributes['id']
         ]);
     }

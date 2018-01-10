@@ -3,7 +3,6 @@
 namespace Bondacom\Antenna\Utilities;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
-use Illuminate\Support\Collection;
 
 abstract class Model
 {
@@ -72,7 +71,7 @@ abstract class Model
      */
     public function __call($method, $parameters)
     {
-        return $this->driver()->$method(...$parameters);
+        return $this->$method(...$parameters);
     }
 
     /**
@@ -89,10 +88,10 @@ abstract class Model
 
     /**
      * @param array $parameters
-     * @return \Illuminate\Support\Collection
+     * @return array
      * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
-    private function all(array $parameters = []) : Collection
+    private function all(array $parameters = []) : array
     {
         return $this->driver->all($parameters);
     }
@@ -226,7 +225,7 @@ abstract class Model
      * @param $id
      * @return Builder
      */
-    protected function belongsTo($class, $id)
+    protected function hasMany($class, $id)
     {
         return new Builder($class, [
             'app_id' => $id
@@ -235,9 +234,12 @@ abstract class Model
 
     /**
      * @param array $parameters
+     * @return $this
      */
     public function append(array $parameters)
     {
         $this->driver->append($parameters);
+
+        return $this;
     }
 }
