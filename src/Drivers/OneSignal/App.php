@@ -3,23 +3,20 @@
 namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\AppInterface;
+use Bondacom\Antenna\Drivers\Utility;
 use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
-class App implements AppInterface
+class App extends Utility implements AppInterface
 {
     /**
-     * @var Requester
+     * @param array $parameters
+     * @return array
+     * @throws AntennaServerException
      */
-    private $requester;
-
-    /**
-     * OneSignalConsumer constructor.
-     * @param Requester $requester
-     */
-    public function __construct(Requester $requester)
+    public function all(array $parameters = []) : array
     {
-        $this->requester = $requester;
+        $this->notImplemented();
     }
 
     /**
@@ -61,6 +58,16 @@ class App implements AppInterface
         $this->assertHasNotErrors($result);
 
         return $result;
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     * @throws AntennaServerException
+     */
+    public function delete(string $id) : bool
+    {
+        $this->notImplemented();
     }
 
     /**
@@ -106,20 +113,6 @@ class App implements AppInterface
             if ($value && !array_key_exists($key, $data)) {
                 throw new MissingOneSignalData($key);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $result
-     * @return $this
-     * @throws AntennaServerException
-     */
-    private function assertHasNotErrors($result)
-    {
-        if (array_key_exists('errors', $result)) {
-            throw new AntennaServerException(implode(', ', $result['errors']));
         }
 
         return $this;

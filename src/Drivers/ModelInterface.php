@@ -39,4 +39,10 @@ interface ModelInterface
      * @throws AntennaServerException
      */
     public function delete(string $id) : bool;
+
+    /**
+     * @param array $parameters
+     * @return $this
+     */
+    public function append(array $parameters);
 }

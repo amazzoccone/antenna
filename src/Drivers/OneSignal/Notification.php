@@ -3,38 +3,10 @@
 namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\NotificationInterface;
+use Bondacom\Antenna\Drivers\Utility;
 
-class Notification implements NotificationInterface
+class Notification extends Utility implements NotificationInterface
 {
-    /**
-     * @var Requester
-     */
-    private $requester;
-
-    /**
-     * @var array
-     */
-    private $parameters = [];
-
-    /**
-     * OneSignalConsumer constructor.
-     * @param Requester $requester
-     */
-    public function __construct(Requester $requester)
-    {
-        $this->requester = $requester;
-    }
-
-    /**
-     * @param array $data
-     * @return $this
-     */
-    public function append($data)
-    {
-        $this->parameters = array_merge($this->parameters, $data);
-        return $this;
-    }
-
     /**
      * Fore more information visit: https://documentation.onesignal.com/v4.0/reference#view-notifications
      *
@@ -90,7 +62,7 @@ class Notification implements NotificationInterface
      */
     public function update(array $data, string $id) : array
     {
-        //TODO: Throw exception because Notification API doesn't have an update endpoint
+        $this->notImplemented();
     }
 
     /**
@@ -106,19 +78,5 @@ class Notification implements NotificationInterface
         $this->assertHasNotErrors($result);
 
         return true;
-    }
-
-    /**
-     * @param $result
-     * @return $this
-     * @throws AntennaServerException
-     */
-    private function assertHasNotErrors($result)
-    {
-        if (array_key_exists('errors', $result)) {
-            throw new AntennaServerException(implode(', ', $result['errors']));
-        }
-
-        return $this;
     }
 }
