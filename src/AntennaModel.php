@@ -92,10 +92,6 @@ class AntennaModel
             $this->driver->create($this->attributes) :
             $this->driver->update($this->attributes, $this->id);
 
-        if (array_key_exists('errors', $result)) {
-            throw new AntennaSaveException(implode(', ', $result['errors']));
-        }
-
         $this->fill($result);
         $this->isDirty = false;
 
@@ -110,10 +106,6 @@ class AntennaModel
     public function refresh()
     {
         $data = $this->driver->find($this->id);
-
-        if (empty($data)) { //Isn't an error?
-            return $this;
-        }
 
         $this->fill($data);
         $this->isDirty = false;

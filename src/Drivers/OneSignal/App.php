@@ -24,31 +24,42 @@ class App implements AppInterface
     /**
      * @param array $data
      * @return array
+     * @throws AntennaServerException
      */
     public function create(array $data) : array
     {
         $this->assertDataCreation($data);
+        $result = $this->requester->post('apps', $data);
+        $this->assertHasNotErrors($result);
 
-        return $this->requester->post('apps', $data);
+        return $result;
     }
 
     /**
      * @param string $id
      * @return array
+     * @throws AntennaServerException
      */
     public function find(string $id) : array
     {
-        return $this->requester->get('apps/'.$id);
+        $result = $this->requester->get('apps/'.$id);
+        $this->assertHasNotErrors($result);
+
+        return $result;
     }
 
     /**
      * @param array $data
      * @param string $id
      * @return array
+     * @throws AntennaServerException
      */
     public function update(array $data, string $id) : array
     {
-        return $this->requester->put('apps/'.$id, $data);
+        $result = $this->requester->put('apps/'.$id, $data);
+        $this->assertHasNotErrors($result);
+
+        return $result;
     }
 
     /**
@@ -94,6 +105,20 @@ class App implements AppInterface
             if ($value && !array_key_exists($key, $data)) {
                 throw new MissingOneSignalData($key);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $result
+     * @return $this
+     * @throws AntennaServerException
+     */
+    private function assertHasNotErrors($result)
+    {
+        if (array_key_exists('errors', $result)) {
+            throw new AntennaServerException(implode(', ', $result['errors']));
         }
 
         return $this;
