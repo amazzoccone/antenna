@@ -42,11 +42,58 @@ abstract class Model
     abstract public function newDriverInstance();
 
     /**
+     * Dynamically retrieve attributes on the model.
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->getAttribute($key);
+    }
+
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param  string $key
+     * @param  mixed $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        $this->setAttribute($key, $value);
+    }
+
+    /**
+     * Handle dynamic method calls into the model.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->driver()->$method(...$parameters);
+    }
+
+    /**
+     * Handle dynamic static method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public static function __callStatic($method, $parameters)
+    {
+        return (new static)->$method(...$parameters);
+    }
+
+    /**
      * @param array $parameters
      * @return \Illuminate\Support\Collection
      * @throws AntennaServerException
      */
-    public function all(array $parameters = []) : Collection
+    private function all(array $parameters = []) : Collection
     {
         return $this->driver->all($parameters);
     }
@@ -56,7 +103,7 @@ abstract class Model
      * @return AntennaModel
      * @throws AntennaServerException
      */
-    public function find($id)
+    private function find($id)
     {
         $model = new static(['id' => $id]);
         $model->refresh();
@@ -69,7 +116,7 @@ abstract class Model
      * @return AntennaModel
      * @throws AntennaServerException
      */
-    public function create(array $data)
+    private function create(array $data)
     {
         $model = new static($data);
         $model->save();
@@ -80,7 +127,7 @@ abstract class Model
     /**
      * @return bool
      */
-    public function delete()
+    private function delete()
     {
         return $this->driver->delete($this->attributes['id']);
     }
@@ -113,35 +160,12 @@ abstract class Model
      */
     public function refresh()
     {
-        $data = $this->driver->find($this->attributes['id'], $this->scope());
+        $data = $this->driver->find($this->attributes['id']);
 
         $this->fill($data);
         $this->isDirty = false;
 
         return $this;
-    }
-
-    /**
-     * Dynamically retrieve attributes on the model.
-     *
-     * @param  string $key
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->getAttribute($key);
-    }
-
-    /**
-     * Dynamically set attributes on the model.
-     *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function __set($key, $value)
-    {
-        $this->setAttribute($key, $value);
     }
 
     /**
@@ -215,29 +239,5 @@ abstract class Model
     public function append(array $parameters)
     {
         $this->driver->append($parameters);
-    }
-
-    /**
-     * Handle dynamic method calls into the model.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return $this->driver()->$method(...$parameters);
-    }
-
-    /**
-     * Handle dynamic static method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public static function __callStatic($method, $parameters)
-    {
-        return (new static)->$method(...$parameters);
     }
 }
