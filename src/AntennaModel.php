@@ -3,8 +3,8 @@
 namespace Bondacom\Antenna;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
+use Bondacom\Antenna\Drivers\NotificationInterface;
 use Bondacom\Antenna\Exceptions\AntennaSaveException;
-use Bondacom\Antenna\Utilities\Notification;
 
 class AntennaModel
 {
@@ -38,12 +38,11 @@ class AntennaModel
     }
 
     /**
-     * @return Notification
+     * @return NotificationInterface
      */
     public function notification()
     {
-        $notification = new Notification();
-        return $notification;
+        return $this->driver->notification();
     }
 
     /**
@@ -90,7 +89,7 @@ class AntennaModel
 
         $result = empty($this->attributes['id']) ?
             $this->driver->create($this->attributes) :
-            $this->driver->update($this->attributes, $this->id);
+            $this->driver->update($this->attributes, $this->attributes['id']);
 
         $this->fill($result);
         $this->isDirty = false;
@@ -105,7 +104,7 @@ class AntennaModel
      */
     public function refresh()
     {
-        $data = $this->driver->find($this->id);
+        $data = $this->driver->find($this->attributes['id']);
 
         $this->fill($data);
         $this->isDirty = false;
