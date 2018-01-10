@@ -35,7 +35,7 @@ abstract class Model
     }
 
     /**
-     * @return
+     * @return \Bondacom\Antenna\Drivers\ModelInterface
      */
     abstract public function newDriverInstance();
 

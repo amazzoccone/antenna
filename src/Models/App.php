@@ -27,8 +27,6 @@ class App extends Model
      */
     public function notification()
     {
-        return $this->hasMany(Notification::class, [
-            'app_id' => $this->attributes['id']
-        ]);
+        return $this->hasMany(Notification::class, $this->attributes['id']);
     }
 }
