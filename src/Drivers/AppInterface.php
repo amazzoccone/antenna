@@ -4,6 +4,8 @@ namespace Bondacom\Antenna\Drivers;
 
 interface AppInterface
 {
+    //TODO: Create ModelInteface for common methods
+
     /**
      * @param array $data
      * @return array

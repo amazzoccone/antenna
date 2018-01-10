@@ -5,22 +5,9 @@ namespace Bondacom\Antenna\Models;
 class Notification
 {
     /**
-     * @var string
+     * @var array
      */
-    protected $appId;
-
-    /**
-     * @var
-     */
-    private $driver;
-
-    /**
-     * Notification constructor.
-     */
-    public function __construct($driver)
-    {
-        $this->driver = $driver;
-    }
+    protected $attributes = [];
 
     /**
      * @param array $parameters
@@ -29,6 +16,7 @@ class Notification
      */
     public function all(array $parameters = []) : array
     {
+        //TODO: Move this to Model
         return $this->driver->all($parameters, $this->appId);
     }
 
@@ -39,17 +27,8 @@ class Notification
      */
     public function find(string $id) : array
     {
+        //TODO: Move this to Model. find() should accept common parameters like a global scope
         return $this->driver->find($id, $this->appId);
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     * @throws AntennaServerException
-     */
-    public function create(array $data) : array
-    {
-        return $this->driver->create($data);
     }
 
     /**

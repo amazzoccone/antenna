@@ -3,10 +3,9 @@
 namespace Bondacom\Antenna;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
-use Bondacom\Antenna\Drivers\NotificationInterface;
 use Bondacom\Antenna\Exceptions\AntennaServerException;
 
-class AntennaModel
+abstract class Model
 {
     /**
      * @var array
@@ -32,26 +31,15 @@ class AntennaModel
      */
     public function __construct(array $attributes = [])
     {
-        $this->driver = app(DriverInterface::class);
+        $this->driver = $this->newDriverInstance();
 
         $this->fill($attributes);
     }
 
     /**
-     * @return NotificationInterface
+     * @return
      */
-    public function notification()
-    {
-        return $this->driver->notification();
-    }
-
-    /**
-     * @return DriverInterface
-     */
-    public function driver()
-    {
-        return $this->driver;
-    }
+    abstract public function newDriverInstance();
 
     /**
      * @param $id
@@ -60,7 +48,7 @@ class AntennaModel
      */
     public static function find($id)
     {
-        $model = new self(['id' => $id]);
+        $model = new static(['id' => $id]);
         $model->refresh();
 
         return $model;
@@ -73,7 +61,7 @@ class AntennaModel
      */
     public static function create(array $data)
     {
-        $model = new self($data);
+        $model = new static($data);
         $model->save();
 
         return $model;

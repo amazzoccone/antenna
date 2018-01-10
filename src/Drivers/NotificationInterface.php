@@ -4,6 +4,8 @@ namespace Bondacom\Antenna\Drivers;
 
 interface NotificationInterface
 {
+    //TODO: Create ModelInteface for common methods
+
     /**
      * @param array $parameters
      * @param string $appId
