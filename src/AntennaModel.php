@@ -42,8 +42,7 @@ class AntennaModel
      */
     public function notification()
     {
-        $notification = app(Notification::class);
-        $notification->driver()->setApp();
+        $notification = new Notification();
         return $notification;
     }
 
@@ -57,13 +56,11 @@ class AntennaModel
 
     /**
      * @param $id
-     * @param $key
      * @return AntennaModel
      */
-    public static function find($id, $key)
+    public static function find($id)
     {
-        $model = new self();
-        $model->driver->setApp($id, $key);
+        $model = new self(['id' => $id]);
         $model->refresh();
 
         return $model;
@@ -77,7 +74,6 @@ class AntennaModel
     {
         $model = new self($data);
         $model->save();
-        $model->driver->setApp($model->id, $model->basic_auth_key);
 
         return $model;
     }
@@ -94,7 +90,7 @@ class AntennaModel
 
         $result = empty($this->attributes['id']) ?
             $this->driver->create($this->attributes) :
-            $this->driver->update($this->attributes);
+            $this->driver->update($this->attributes, $this->id);
 
         if (array_key_exists('errors', $result)) {
             throw new AntennaSaveException(implode(', ', $result['errors']));
@@ -113,7 +109,7 @@ class AntennaModel
      */
     public function refresh()
     {
-        $data = $this->driver->get();
+        $data = $this->driver->get($this->id);
 
         if (empty($data)) { //Isn't an error?
             return $this;

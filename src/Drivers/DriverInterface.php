@@ -5,10 +5,10 @@ namespace Bondacom\Antenna\Drivers;
 interface DriverInterface
 {
     /**
+     * DriverInterface constructor.
      * @param string $key
-     * @return $this
      */
-    public function setUserKey(string $key);
+    public function __construct(string $key);
 
     /**
      * @return \Bondacom\Antenna\Drivers\AppInterface
