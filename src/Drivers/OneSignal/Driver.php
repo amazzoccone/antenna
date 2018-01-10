@@ -25,7 +25,7 @@ class Driver implements DriverInterface
     public function __construct(string $key)
     {
         $requester = app(Requester::class);
-        $requester->setUserKey($key);
+        $requester->setKey($key);
 
         $this->app = new App($requester);
         $this->notification = new Notification($requester);

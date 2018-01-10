@@ -3,7 +3,6 @@
 namespace Bondacom\Antenna\Utilities;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
-use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Illuminate\Support\Collection;
 
 abstract class Model
@@ -91,7 +90,7 @@ abstract class Model
     /**
      * @param array $parameters
      * @return \Illuminate\Support\Collection
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     private function all(array $parameters = []) : Collection
     {
@@ -101,7 +100,7 @@ abstract class Model
     /**
      * @param $id
      * @return AntennaModel
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     private function find($id)
     {
@@ -114,7 +113,7 @@ abstract class Model
     /**
      * @param array $data
      * @return AntennaModel
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     private function create(array $data)
     {
@@ -126,6 +125,7 @@ abstract class Model
 
     /**
      * @return bool
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     private function delete()
     {
@@ -134,7 +134,7 @@ abstract class Model
 
     /**
      * @return $this
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     public function save()
     {
@@ -156,7 +156,7 @@ abstract class Model
      * Reload the current model instance with fresh attributes from the server.
      *
      * @return $this
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     public function refresh()
     {

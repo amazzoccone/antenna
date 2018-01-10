@@ -3,6 +3,8 @@
 namespace Bondacom\Antenna\Drivers;
 
 use Bondacom\Antenna\Drivers\OneSignal\Requester;
+use Bondacom\Antenna\Exceptions\AntennaMethodNotExistsException;
+use Bondacom\Antenna\Exceptions\AntennaServerException;
 
 abstract class Utility
 {

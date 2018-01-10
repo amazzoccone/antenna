@@ -2,6 +2,7 @@
 
 namespace Bondacom\Antenna\Drivers;
 
+use Bondacom\Antenna\Exceptions\MissingUserKeyRequired;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -15,12 +16,17 @@ abstract class Requester
     /**
      * @var Client
      */
-    private $guzzleClient;
+    protected $guzzleClient;
 
     /**
      * @var array
      */
     protected $headers = [];
+
+    /**
+     * @var string
+     */
+    protected $key;
 
     /**
      * AntennaRequester constructor.
@@ -29,6 +35,22 @@ abstract class Requester
     public function __construct(Client $guzzleClient)
     {
         $this->guzzleClient = $guzzleClient;
+    }
+
+    /**
+     * @param string $key
+     * @return $this
+     * @throws MissingUserKeyRequired
+     */
+    public function setKey($key)
+    {
+        if (empty($key)) {
+            throw new MissingUserKeyRequired();
+        }
+
+        $this->key = $key;
+
+        return $this;
     }
 
     /**
@@ -74,6 +96,7 @@ abstract class Requester
     private function makeRequest(string $endpoint, string $method)
     {
         try {
+            $this->setAuthorizationHeader();
             $uri = $this->url() . '/' . $endpoint;
             $request = $this->guzzleClient->{$method}($uri, $this->headers);
             return $this->processResponse($request);
@@ -90,5 +113,10 @@ abstract class Requester
     {
         $this->headers = [];
         return json_decode($request->getBody()->getContents(), true);
+    }
+
+    private function setAuthorizationHeader()
+    {
+        $this->headers['headers']['Authorization'] = 'Basic ' . $this->key;
     }
 }

@@ -12,7 +12,7 @@ class App extends Utility implements AppInterface
     /**
      * @param array $parameters
      * @return array
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     public function all(array $parameters = []) : array
     {
@@ -22,7 +22,7 @@ class App extends Utility implements AppInterface
     /**
      * @param array $data
      * @return array
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     public function create(array $data) : array
     {
@@ -36,7 +36,7 @@ class App extends Utility implements AppInterface
     /**
      * @param string $id
      * @return array
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     public function find(string $id) : array
     {
@@ -50,7 +50,7 @@ class App extends Utility implements AppInterface
      * @param array $data
      * @param string $id
      * @return array
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     public function update(array $data, string $id) : array
     {
@@ -63,7 +63,7 @@ class App extends Utility implements AppInterface
     /**
      * @param string $id
      * @return bool
-     * @throws AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     public function delete(string $id) : bool
     {
