@@ -3,7 +3,6 @@
 namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\NotificationInterface;
-use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class Notification implements NotificationInterface
 {
@@ -14,7 +13,7 @@ class Notification implements NotificationInterface
 
     /**
      * OneSignalConsumer constructor.
-     * @param Requester $requester
+     * @param string $key
      */
     public function __construct(string $key)
     {
@@ -24,82 +23,64 @@ class Notification implements NotificationInterface
     /**
      * @param array $parameters
      * @return array
+     * @throws AntennaServerException
      */
-    public function all(array $parameters = [])
+    public function all(array $parameters = []) : array
     {
-        return $this->requester
-            ->setUserKey($this->userKey)
-            ->get('apps/'.$id);
+        $result = $this->requester->get('apps', $parameters);
+        $this->assertHasNotErrors($result);
+
+        return $result;
     }
 
     /**
-     * @param array $data
-     * @return array
-     */
-    public function create(array $data)
-    {
-        $this->assertDataCreation($data);
-
-        return $this->requester
-            ->setUserKey($this->userKey)
-            ->post('apps', $data);
-    }
-
-    /**
-     * @param array $data
      * @param string $id
      * @return array
+     * @throws AntennaServerException
      */
-    public function update($data, string $id)
+    public function find(string $id) : array
     {
-        return $this->requester
-            ->setUserKey($this->userKey)
-            ->put('apps/'.$id, $data);
+        $result = $this->requester->get('apps', $id);
+        $this->assertHasNotErrors($result);
+
+        return $result;
     }
 
     /**
-     * Validate if we have the minimum required data to create an app
-     *
-     * @param $data
-     * @throws MissingOneSignalData
-     * @return $this
+     * @param array $data
+     * @return array
+     * @throws AntennaServerException
      */
-    private function assertDataCreation($data)
+    public function create(array $data) : array
     {
-        // For references about the fields go to https://documentation.onesignal.com/reference#create-an-app
-        $fields = [
-            //App name, REQUIRED
-            'name' => true,
+        $result = $this->requester->post('apps', $data);
+        $this->assertHasNotErrors($result);
 
-            // IOS Configuration
-            'apns_env' => false,
-            'apns_p12' => false,
-            'apns_p12_password' => false,
+        return $result;
+    }
 
-            // Android Configuration
-            'gcm_key' => false,
-            'android_gcm_sender_id' => false,
+    /**
+     * @param string $id
+     * @return array
+     * @throws AntennaServerException
+     */
+    public function cancel(string $id) : array
+    {
+        $result = $this->requester->put('apps/'.$id, $data);
+        $this->assertHasNotErrors($result);
 
-            // Web notifications (Chrome and Firefox)
-            'chrome_web_origin' => false,
-            'chrome_web_default_notification_icon' => false,
-            'chrome_web_sub_domain' => false,
+        return $result;
+    }
 
-            // Web notifications (Safari)
-            'safari_apns_p12' => false,
-            'safari_apns_p12_password' => false,
-            'site_name' => false,
-            'safari_site_origin' => false,
-            'safari_icon_256_256' => false,
-
-            //Chrome extension
-            'chrome_key' => false
-        ];
-
-        foreach ($fields as $key => $value) {
-            if ($value && !array_key_exists($key, $data)) {
-                throw new MissingOneSignalData($key);
-            }
+    /**
+     * @param $result
+     * @return $this
+     * @throws AntennaServerException
+     */
+    private function assertHasNotErrors($result)
+    {
+        if (array_key_exists('errors', $result)) {
+            throw new AntennaServerException(implode(', ', $result['errors']));
         }
 
         return $this;

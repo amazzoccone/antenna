@@ -7,25 +7,28 @@ interface NotificationInterface
     /**
      * @param array $parameters
      * @return array
+     * @throws AntennaServerException
      */
-    public function all(array $parameters = []);
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function create(array $data);
+    public function all(array $parameters = []) : array;
 
     /**
      * @param string $id
      * @return array
+     * @throws AntennaServerException
      */
-    public function cancel(string $id);
+    public function find(string $id) : array;
 
     /**
      * @param array $data
+     * @return array
+     * @throws AntennaServerException
+     */
+    public function create(array $data) : array;
+
+    /**
      * @param string $id
      * @return array
+     * @throws AntennaServerException
      */
-    public function update(array $data, string $id);
+    public function cancel(string $id) : array;
 }

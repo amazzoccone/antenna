@@ -3,6 +3,8 @@
 namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
+use Bondacom\Antenna\Drivers\AppInterface;
+use Bondacom\Antenna\Drivers\NotificationInterface;
 
 class Driver implements DriverInterface
 {
@@ -32,7 +34,7 @@ class Driver implements DriverInterface
     /**
      * @return \Bondacom\Antenna\Drivers\AppInterface
      */
-    public function app()
+    public function app() : AppInterface
     {
         return $this->app;
     }
@@ -40,7 +42,7 @@ class Driver implements DriverInterface
     /**
      * @return \Bondacom\Antenna\Drivers\NotificationInterface
      */
-    public function notification()
+    public function notification(): NotificationInterface
     {
         return $this->notification;
     }
