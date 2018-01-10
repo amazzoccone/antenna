@@ -33,7 +33,6 @@ abstract class Model
     public function __construct(array $attributes = [])
     {
         $this->driver = $this->newDriverInstance();
-
         $this->fill($attributes);
     }
 
@@ -211,6 +210,14 @@ abstract class Model
     }
 
     /**
+     * @param array $parameters
+     */
+    public function append(array $parameters)
+    {
+        $this->driver->append($parameters);
+    }
+
+    /**
      * Handle dynamic method calls into the model.
      *
      * @param  string  $method
@@ -219,7 +226,7 @@ abstract class Model
      */
     public function __call($method, $parameters)
     {
-        return $this->newQuery()->$method(...$parameters);
+        return $this->driver()->$method(...$parameters);
     }
 
     /**

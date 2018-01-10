@@ -27,7 +27,7 @@ class App extends Model
      */
     public function notification()
     {
-        return $this->newQuery(self::class)->append([
+        return $this->belongsTo(self::class, [
             'app_id' => $this->attributes['id']
         ]);
     }

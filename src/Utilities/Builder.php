@@ -32,7 +32,7 @@ class Builder
     public function append(array $data)
     {
         $this->parameters = array_merge($this->parameters, $data);
-        
+
         return $this;
     }
 
