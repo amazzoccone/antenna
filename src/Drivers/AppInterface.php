@@ -8,18 +8,18 @@ interface AppInterface
      * @param array $data
      * @return array
      */
-    public function create(array $data);
+    public function create(array $data) : array;
 
     /**
      * @param string $id
      * @return array
      */
-    public function find(string $id);
+    public function find(string $id) : array;
 
     /**
      * @param array $data
      * @param string $id
      * @return array
      */
-    public function update(array $data, string $id);
+    public function update(array $data, string $id) : array;
 }

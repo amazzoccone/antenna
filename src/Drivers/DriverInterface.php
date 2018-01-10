@@ -13,10 +13,10 @@ interface DriverInterface
     /**
      * @return \Bondacom\Antenna\Drivers\AppInterface
      */
-    public function app();
+    public function app() : AppInterface;
 
     /**
      * @return \Bondacom\Antenna\Drivers\NotificationInterface
      */
-    public function notification();
+    public function notification() : NotificationInterface;
 }

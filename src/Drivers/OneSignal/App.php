@@ -25,7 +25,7 @@ class App implements AppInterface
      * @param array $data
      * @return array
      */
-    public function create(array $data)
+    public function create(array $data) : array
     {
         $this->assertDataCreation($data);
 
@@ -36,7 +36,7 @@ class App implements AppInterface
      * @param string $id
      * @return array
      */
-    public function find(string $id)
+    public function find(string $id) : array
     {
         return $this->requester->get('apps/'.$id);
     }
@@ -46,7 +46,7 @@ class App implements AppInterface
      * @param string $id
      * @return array
      */
-    public function update($data, string $id)
+    public function update(array $data, string $id) : array
     {
         return $this->requester->put('apps/'.$id, $data);
     }
