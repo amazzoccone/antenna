@@ -15,18 +15,20 @@ class App extends Model
     ];
 
     /**
-     * @return Notification
+     * @return \Bondacom\Antenna\Drivers\AppInterface
      */
-    public function notification()
+    public function newDriverInstance()
     {
-        return new Builder(self::class, $scopes);
+        return app(DriverInterface::class)->app();
     }
 
     /**
-     * @return \Bondacom\Antenna\Drivers\AppInterface
+     * @return Builder
      */
-    public static function newDriverInstance()
+    public function notification()
     {
-        return app(DriverInterface::class)->app();
+        return $this->newQuery(self::class)->append([
+            'app_id' => $this->attributes['id']
+        ]);
     }
 }

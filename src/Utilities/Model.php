@@ -40,16 +40,16 @@ abstract class Model
     /**
      * @return
      */
-    abstract public static function newDriverInstance();
+    abstract public function newDriverInstance();
 
     /**
      * @param array $parameters
      * @return \Illuminate\Support\Collection
      * @throws AntennaServerException
      */
-    public static function all(array $parameters = []) : Collection
+    public function all(array $parameters = []) : Collection
     {
-        return self::newDriverInstance()->all($parameters);
+        return $this->driver->all($parameters);
     }
 
     /**
@@ -57,7 +57,7 @@ abstract class Model
      * @return AntennaModel
      * @throws AntennaServerException
      */
-    public static function find($id)
+    public function find($id)
     {
         $model = new static(['id' => $id]);
         $model->refresh();
@@ -70,12 +70,20 @@ abstract class Model
      * @return AntennaModel
      * @throws AntennaServerException
      */
-    public static function create(array $data)
+    public function create(array $data)
     {
         $model = new static($data);
         $model->save();
 
         return $model;
+    }
+
+    /**
+     * @return bool
+     */
+    public function delete()
+    {
+        return $this->driver->delete($this->attributes['id']);
     }
 
     /**
@@ -191,12 +199,38 @@ abstract class Model
     }
 
     /**
-     * Default parameters when request driver
-     *
-     * @return array
+     * @param $class
+     * @param $id
+     * @return Builder
      */
-    private function scope()
+    protected function belongsTo($class, $id)
     {
-        return [];
+        return new Builder($class, [
+            'app_id' => $id
+        ]);
+    }
+
+    /**
+     * Handle dynamic method calls into the model.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->newQuery()->$method(...$parameters);
+    }
+
+    /**
+     * Handle dynamic static method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public static function __callStatic($method, $parameters)
+    {
+        return (new static)->$method(...$parameters);
     }
 }

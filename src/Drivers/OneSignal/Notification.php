@@ -12,12 +12,27 @@ class Notification implements NotificationInterface
     private $requester;
 
     /**
+     * @var array
+     */
+    private $parameters = [];
+
+    /**
      * OneSignalConsumer constructor.
      * @param Requester $requester
      */
     public function __construct(Requester $requester)
     {
         $this->requester = $requester;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function append($data)
+    {
+        $this->parameters = array_merge($this->parameters, $data);
+        return $this;
     }
 
     /**
@@ -29,7 +44,8 @@ class Notification implements NotificationInterface
      */
     public function all(array $parameters = []) : array
     {
-        $result = $this->requester->get('notifications', $parameters);
+        $this->append($parameters);
+        $result = $this->requester->get('notifications', $this->parameters);
         $this->assertHasNotErrors($result);
 
         return $result['notifications'];
@@ -44,7 +60,8 @@ class Notification implements NotificationInterface
      */
     public function create(array $data) : array
     {
-        $result = $this->requester->post('notifications', $data);
+        $this->append($data);
+        $result = $this->requester->post('notifications', $this->parameters);
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -59,7 +76,7 @@ class Notification implements NotificationInterface
      */
     public function find(string $id) : array
     {
-        $result = $this->requester->get('notifications/'.$id, ['app_id' => $appId]);
+        $result = $this->requester->get('notifications/'.$id, $this->parameters);
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -85,7 +102,7 @@ class Notification implements NotificationInterface
      */
     public function delete(string $id) : bool
     {
-        $result = $this->requester->delete('notifications/'.$id, ['app_id' => $appId]);
+        $result = $this->requester->delete('notifications/'.$id, $this->parameters);
         $this->assertHasNotErrors($result);
 
         return true;

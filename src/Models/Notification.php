@@ -14,28 +14,8 @@ class Notification extends Model
     /**
      * @return \Bondacom\Antenna\Drivers\NotificationInterface
      */
-    public static function newDriverInstance()
+    public function newDriverInstance()
     {
         return app(DriverInterface::class)->notification();
-    }
-
-    /**
-     * @param string $id
-     * @return bool
-     * @throws AntennaServerException
-     */
-    public function cancel(string $id) : bool
-    {
-        return $this->driver->delete($id);
-    }
-
-    /**
-     * @return array
-     */
-    protected function scope()
-    {
-        return [
-            'app_id' => $this->attributes['app_id']
-        ];
     }
 }
