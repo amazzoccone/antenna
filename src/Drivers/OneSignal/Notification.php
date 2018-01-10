@@ -7,40 +7,46 @@ use Bondacom\Antenna\Drivers\NotificationInterface;
 class Notification implements NotificationInterface
 {
     /**
-     * @var AntennaRequester
+     * @var Requester
      */
     private $requester;
 
     /**
      * OneSignalConsumer constructor.
-     * @param string $key
+     * @param Requester $requester
      */
-    public function __construct(string $key)
+    public function __construct(Requester $requester)
     {
-        $this->requester = app(Requester::class);
+        $this->requester = $requester;
     }
 
     /**
-     * @param array $parameters
+     * Fore more information visit: https://documentation.onesignal.com/v4.0/reference#view-notifications
+     *
+     * @param array $parameters (limit, offset)
+     * @param string $appId
      * @return array
      * @throws AntennaServerException
      */
-    public function all(array $parameters = []) : array
+    public function all(array $parameters = [], string $appId) : array
     {
-        $result = $this->requester->get('apps', $parameters);
+        $result = $this->requester->get('notifications', $parameters);
         $this->assertHasNotErrors($result);
 
-        return $result;
+        return $result['notifications'];
     }
 
     /**
+     * Fore more information visit: https://documentation.onesignal.com/v4.0/reference#view-notification
+     *
      * @param string $id
+     * @param string $appId
      * @return array
      * @throws AntennaServerException
      */
-    public function find(string $id) : array
+    public function find(string $id, string $appId) : array
     {
-        $result = $this->requester->get('apps', $id);
+        $result = $this->requester->get('notifications/'.$id, ['app_id' => $appId]);
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -53,7 +59,7 @@ class Notification implements NotificationInterface
      */
     public function create(array $data) : array
     {
-        $result = $this->requester->post('apps', $data);
+        $result = $this->requester->post('notifications', $data);
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -61,15 +67,16 @@ class Notification implements NotificationInterface
 
     /**
      * @param string $id
-     * @return array
+     * @param string $appId
+     * @return bool
      * @throws AntennaServerException
      */
-    public function cancel(string $id) : array
+    public function cancel(string $id, string $appId) : bool
     {
-        $result = $this->requester->put('apps/'.$id, $data);
+        $result = $this->requester->delete('notifications/'.$id, ['app_id' => $appId]);
         $this->assertHasNotErrors($result);
 
-        return $result;
+        return true;
     }
 
     /**

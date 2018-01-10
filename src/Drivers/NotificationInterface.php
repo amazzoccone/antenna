@@ -6,17 +6,19 @@ interface NotificationInterface
 {
     /**
      * @param array $parameters
+     * @param string $appId
      * @return array
      * @throws AntennaServerException
      */
-    public function all(array $parameters = []) : array;
+    public function all(array $parameters = [], string $appId) : array;
 
     /**
      * @param string $id
+     * @param string $appId
      * @return array
      * @throws AntennaServerException
      */
-    public function find(string $id) : array;
+    public function find(string $id, string $appId) : array;
 
     /**
      * @param array $data
@@ -27,8 +29,9 @@ interface NotificationInterface
 
     /**
      * @param string $id
-     * @return array
+     * @param string $appId
+     * @return bool
      * @throws AntennaServerException
      */
-    public function cancel(string $id) : array;
+    public function cancel(string $id, string $appId) : bool;
 }
