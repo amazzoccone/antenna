@@ -3,8 +3,9 @@
 namespace Bondacom\Antenna\Models;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
+use Bondacom\Antenna\Utilities\Model;
 
-class App
+class App extends Model
 {
     /**
      * @var array
@@ -18,7 +19,7 @@ class App
      */
     public function notification()
     {
-        return new Notification($this->attributes['id']);
+        return new Builder(self::class, $scopes);
     }
 
     /**

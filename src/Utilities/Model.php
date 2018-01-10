@@ -1,6 +1,6 @@
 <?php
 
-namespace Bondacom\Antenna;
+namespace Bondacom\Antenna\Utilities;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Exceptions\AntennaServerException;
@@ -47,7 +47,7 @@ abstract class Model
      * @return \Illuminate\Support\Collection
      * @throws AntennaServerException
      */
-    public static function all(array $parameters = [])
+    public static function all(array $parameters = []) : Collection
     {
         return self::newDriverInstance()->all($parameters);
     }

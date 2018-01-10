@@ -2,7 +2,9 @@
 
 namespace Bondacom\Antenna\Models;
 
-class Notification
+use Bondacom\Antenna\Utilities\Model;
+
+class Notification extends Model
 {
     /**
      * @var array
