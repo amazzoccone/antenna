@@ -4,7 +4,7 @@ namespace Bondacom\Antenna;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Drivers\NotificationInterface;
-use Bondacom\Antenna\Exceptions\AntennaSaveException;
+use Bondacom\Antenna\Exceptions\AntennaServerException;
 
 class AntennaModel
 {
@@ -56,6 +56,7 @@ class AntennaModel
     /**
      * @param $id
      * @return AntennaModel
+     * @throws AntennaServerException
      */
     public static function find($id)
     {
@@ -68,6 +69,7 @@ class AntennaModel
     /**
      * @param array $data
      * @return AntennaModel
+     * @throws AntennaServerException
      */
     public static function create(array $data)
     {
@@ -79,7 +81,7 @@ class AntennaModel
 
     /**
      * @return $this
-     * @throws AntennaSaveException
+     * @throws AntennaServerException
      */
     public function save()
     {
@@ -101,6 +103,7 @@ class AntennaModel
      * Reload the current model instance with fresh attributes from the server.
      *
      * @return $this
+     * @throws AntennaServerException
      */
     public function refresh()
     {

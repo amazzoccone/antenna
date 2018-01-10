@@ -3,12 +3,13 @@
 namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\AppInterface;
+use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class App implements AppInterface
 {
     /**
-     * @var AntennaRequester
+     * @var Requester
      */
     private $requester;
 

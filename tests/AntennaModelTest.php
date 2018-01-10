@@ -4,7 +4,7 @@ namespace Bondacom\Antenna\Tests;
 
 use Bondacom\Antenna\AntennaModel;
 use Bondacom\Antenna\Drivers\OneSignal\Requester;
-use Bondacom\Antenna\Exceptions\AntennaSaveException;
+use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
@@ -86,7 +86,7 @@ class AntennaModelTest extends TestCase
         $app = AntennaModel::find(random_int(1, 9999), str_random());
         $app->gcm_key = 'dnudsijsd23';
 
-        $this->expectException(AntennaSaveException::class);
+        $this->expectException(AntennaServerException::class);
         $app->save();
     }
 
