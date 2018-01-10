@@ -14,7 +14,7 @@ interface AppInterface
      * @param string $id
      * @return array
      */
-    public function get(string $id);
+    public function find(string $id);
 
     /**
      * @param array $data

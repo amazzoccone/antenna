@@ -109,7 +109,7 @@ class AntennaModel
      */
     public function refresh()
     {
-        $data = $this->driver->get($this->id);
+        $data = $this->driver->find($this->id);
 
         if (empty($data)) { //Isn't an error?
             return $this;
