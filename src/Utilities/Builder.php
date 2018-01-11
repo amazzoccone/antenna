@@ -2,8 +2,6 @@
 
 namespace Bondacom\Antenna\Utilities;
 
-use Bondacom\Antenna\Exceptions\AntennaMethodNotExistsException;
-
 class Builder
 {
     /**
@@ -14,17 +12,15 @@ class Builder
     /**
      * @var array
      */
-    private $parameters;
+    private $parameters = [];
 
     /**
      * Builder constructor.
      * @param string $class
-     * @param array $parameters
      */
-    public function __construct(string $class, $parameters)
+    public function __construct(string $class)
     {
         $this->class = $class;
-        $this->parameters = $parameters;
     }
 
     /**
@@ -48,8 +44,6 @@ class Builder
         $model = new $this->class();
         $model->append($this->parameters);
 
-        return empty($arguments) ?
-            $model->{$name}() :
-            $model->{$name}($arguments[0] ?? []);
+        return $model->{$name}(...$arguments);
     }
 }

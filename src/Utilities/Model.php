@@ -103,10 +103,10 @@ abstract class Model
      */
     private function find($id)
     {
-        $model = new static(['id' => $id]);
-        $model->refresh();
+        $this->id = $id;
+        $this->refresh();
 
-        return $model;
+        return $this;
     }
 
     /**
@@ -116,10 +116,10 @@ abstract class Model
      */
     private function create(array $data)
     {
-        $model = new static($data);
-        $model->save();
+        $this->fill($data);
+        $this->save();
 
-        return $model;
+        return $this;
     }
 
     /**
