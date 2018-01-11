@@ -103,7 +103,7 @@ abstract class Model
      */
     private function find($id)
     {
-        $this->id = $id;
+        $this->attributes['id'] = $id;
         $this->refresh();
 
         return $this;

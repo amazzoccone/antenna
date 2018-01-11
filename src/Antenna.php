@@ -28,7 +28,7 @@ class Antenna
     {
         $creds = $this->config($config);
 
-        return App::find($creds['id'], $creds['key']);
+        return App::find($creds['id']);
     }
 
     /**
