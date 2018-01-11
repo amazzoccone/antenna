@@ -4,7 +4,6 @@ namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\AppInterface;
 use Bondacom\Antenna\Drivers\Utility;
-use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class App extends Utility implements AppInterface

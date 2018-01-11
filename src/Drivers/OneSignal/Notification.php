@@ -4,6 +4,8 @@ namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\NotificationInterface;
 use Bondacom\Antenna\Drivers\Utility;
+use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
+use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class Notification extends Utility implements NotificationInterface
 {
@@ -17,6 +19,7 @@ class Notification extends Utility implements NotificationInterface
     public function all(array $parameters = []) : array
     {
         $this->append($parameters);
+        $this->assertHasApp()->prepareForRequest();
         $result = $this->requester->get('notifications', $this->parameters);
         $this->assertHasNotErrors($result);
 
@@ -33,6 +36,7 @@ class Notification extends Utility implements NotificationInterface
     public function create(array $data) : array
     {
         $this->append($data);
+        $this->assertHasApp()->prepareForRequest();
         $result = $this->requester->post('notifications', $this->parameters);
         $this->assertHasNotErrors($result);
 
@@ -48,6 +52,7 @@ class Notification extends Utility implements NotificationInterface
      */
     public function find(string $id) : array
     {
+        $this->assertHasApp()->prepareForRequest();
         $result = $this->requester->get('notifications/'.$id, $this->parameters);
         $this->assertHasNotErrors($result);
 
@@ -74,9 +79,35 @@ class Notification extends Utility implements NotificationInterface
      */
     public function delete(string $id) : bool
     {
+        $this->assertHasApp()->prepareForRequest();
         $result = $this->requester->delete('notifications/'.$id, $this->parameters);
         $this->assertHasNotErrors($result);
 
         return true;
+    }
+
+    /**
+     * @return $this
+     * @throws MissingOneSignalData
+     */
+    private function assertHasApp()
+    {
+        if (array_key_exists('app_id', $this->parameters) && array_key_exists('app_key', $this->parameters)) {
+            return $this;
+        }
+
+        throw new MissingOneSignalData();
+    }
+
+    /**
+     * @return $this
+     */
+    private function prepareForRequest()
+    {
+        $key = $this->parameters['app_key'];
+        unset($this->parameters['app_key']);
+        $this->requester->setAuthorizationKey($key);
+
+        return $this;
     }
 }

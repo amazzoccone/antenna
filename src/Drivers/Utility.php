@@ -19,12 +19,20 @@ abstract class Utility
     protected $parameters = [];
 
     /**
-     * OneSignalConsumer constructor.
+     * Utility constructor.
      * @param Requester $requester
      */
     public function __construct(Requester $requester)
     {
         $this->requester = $requester;
+    }
+
+    /**
+     * @return Requester
+     */
+    public function requester()
+    {
+        return $this->requester;
     }
 
     /**

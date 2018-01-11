@@ -42,12 +42,8 @@ abstract class Requester
      * @return $this
      * @throws MissingUserKeyRequired
      */
-    public function setKey($key)
+    public function setAuthorizationKey($key)
     {
-        if (empty($key)) {
-            throw new MissingUserKeyRequired();
-        }
-
         $this->key = $key;
 
         return $this;
@@ -118,8 +114,18 @@ abstract class Requester
         return json_decode($request->getBody()->getContents(), true);
     }
 
+    /**
+     * @throws MissingUserKeyRequired
+     * @return $this
+     */
     private function setAuthorizationHeader()
     {
+        if (empty($this->key)) {
+            throw new MissingUserKeyRequired();
+        }
+
         $this->options['headers']['Authorization'] = 'Basic ' . $this->key;
+
+        return $this;
     }
 }

@@ -27,6 +27,9 @@ class App extends Model
      */
     public function notification()
     {
-        return $this->hasMany(Notification::class, $this->attributes['id']);
+        return $this->newQuery(Notification::class)->append([
+            'app_id' => $this->attributes['id'],
+            'app_key' => $this->attributes['basic_auth_key'],
+        ]);
     }
 }

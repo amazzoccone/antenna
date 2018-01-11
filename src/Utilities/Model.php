@@ -222,14 +222,11 @@ abstract class Model
 
     /**
      * @param $class
-     * @param $id
      * @return Builder
      */
-    protected function hasMany($class, $id)
+    protected function newQuery($class)
     {
-        return new Builder($class, [
-            'app_id' => $id
-        ]);
+        return new Builder($class);
     }
 
     /**
