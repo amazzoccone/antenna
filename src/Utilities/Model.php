@@ -106,7 +106,7 @@ abstract class Model
     {
         try{
             return $this->findOrFail($id);
-        } catch(\AntennaNotFoundException $e){
+        } catch(AntennaNotFoundException $e){
             return null;
         }
     }

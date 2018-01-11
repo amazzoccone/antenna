@@ -16,7 +16,8 @@ class AntennaTest extends TestCase
     {
         $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
-        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('get')->once()->andReturnSelf();
+        $mock->shouldReceive('responseContent')->once()->andReturn($data);
 
         $app = Antenna::app();
 
@@ -30,7 +31,8 @@ class AntennaTest extends TestCase
     {
         $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
-        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('get')->once()->andReturnSelf();
+        $mock->shouldReceive('responseContent')->once()->andReturn($data);
 
         $app = Antenna::app('default');
 
@@ -44,7 +46,8 @@ class AntennaTest extends TestCase
     {
         $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
-        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('get')->once()->andReturnSelf();
+        $mock->shouldReceive('responseContent')->once()->andReturn($data);
 
         $app = Antenna::app([
             'id' => random_int(1, 99999),
@@ -61,7 +64,8 @@ class AntennaTest extends TestCase
     {
         $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
-        $mock->shouldReceive('post')->once()->andReturn($data);
+        $mock->shouldReceive('post')->once()->andReturnSelf();
+        $mock->shouldReceive('responseContent')->once()->andReturn($data);
 
         $app = Antenna::create([
             'name' => 'Testing One Signal Application',
