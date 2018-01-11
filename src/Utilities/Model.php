@@ -103,13 +103,23 @@ abstract class Model
      */
     private function find($id)
     {
-        $this->attributes['id'] = $id;
-
         try{
-            $this->refresh();
+            return $this->findOrFail($id);
         } catch(\AntennaNotFoundException $e){
             return null;
         }
+    }
+
+    /**
+     * @param $id
+     * @return Model|null
+     * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
+     * @throws \Bondacom\Antenna\Exceptions\AntennaNotFoundException
+     */
+    private function findOrFail($id)
+    {
+        $this->attributes['id'] = $id;
+        $this->refresh();
 
         return $this;
     }
