@@ -75,12 +75,4 @@ abstract class Utility
     {
         throw new AntennaMethodNotExistsException();
     }
-
-    /**
-     * @return array
-     */
-    protected function result($response)
-    {
-        return json_decode($response->getBody()->getContents(), true);
-    }
 }

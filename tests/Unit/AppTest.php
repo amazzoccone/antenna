@@ -3,6 +3,7 @@
 namespace Bondacom\Antenna\Tests\Unit;
 
 use Bondacom\Antenna\Drivers\OneSignal\Requester;
+use Bondacom\Antenna\Exceptions\AntennaNotFoundException;
 use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 use Bondacom\Antenna\Models\App;
@@ -13,7 +14,21 @@ class AppTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_null_if_app_not_exists()
+    public function it_get_a_one_signal_model_successfully()
+    {
+        $data = $this->fakeAppData();
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')->once()->andReturn($data);
+
+        $app = App::find(str_random(), str_random());
+
+        $this->assertInstanceOf(App::class, $app);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_null_if_app_is_empty()
     {
         $app = App::find('');
         $this->assertNull($app);
@@ -22,15 +37,38 @@ class AppTest extends TestCase
     /**
      * @test
      */
-    public function it_get_a_one_signal_model_successfully()
+    public function it_returns_null_if_app_not_exists()
     {
-        $data = $this->fakeRequesterData();
         $mock = $this->mock(Requester::class)->makePartial();
-        $mock->shouldReceive('get')->once()->andReturn($data);
+        $mock->shouldReceive('get')
+            ->once()
+            ->andThrow(AntennaNotFoundException::class);
 
-        $app = App::find(random_int(1, 9999), str_random());
+        $app = App::find(str_random());
+        $this->assertNull($app);
+    }
 
-        $this->assertInstanceOf(App::class, $app);
+    /**
+     * @test
+     */
+    public function it_throws_an_exception_if_app_is_empty()
+    {
+        $this->expectException(AntennaNotFoundException::class);
+        App::findOrFail('');
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_exception_if_app_not_exists()
+    {
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')
+            ->once()
+            ->andThrow(AntennaNotFoundException::class);
+
+        $this->expectException(AntennaNotFoundException::class);
+        App::findOrFail(str_random());
     }
 
     /**
@@ -38,12 +76,12 @@ class AppTest extends TestCase
      */
     public function it_updates_a_one_signal_model_successfully()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
         $mock->shouldReceive('put')->once()->andReturn($data);
 
-        $app = App::find(random_int(1, 9999), str_random());
+        $app = App::find(str_random(), str_random());
         $app->chrome_web_origin = 'https://example.com';
         $result = $app->save();
 
@@ -55,7 +93,7 @@ class AppTest extends TestCase
      */
     public function it_creates_a_one_signal_app_successfully()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('post')->once()->andReturn($data);
 
@@ -83,7 +121,7 @@ class AppTest extends TestCase
      */
     public function it_throws_an_exception_if_fails_when_save()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
         $mock->shouldReceive('put')->once()->andReturn([
@@ -92,7 +130,7 @@ class AppTest extends TestCase
             ]
         ]);
 
-        $app = App::find(random_int(1, 9999), str_random());
+        $app = App::find(str_random(), str_random());
         $app->gcm_key = 'dnudsijsd23';
 
         $this->expectException(AntennaServerException::class);
@@ -104,11 +142,11 @@ class AppTest extends TestCase
      */
     public function getAttributes_method_returns_all_attributes()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
-        $app = App::find(random_int(1, 9999), str_random());
+        $app = App::find(str_random(), str_random());
         $attributes = $app->getAttributes();
 
         $this->assertEquals($data, $attributes);
@@ -119,11 +157,11 @@ class AppTest extends TestCase
      */
     public function it_returns_attribute()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
-        $app = App::find(random_int(1, 9999), str_random());
+        $app = App::find(str_random(), str_random());
         $this->assertEquals($data['id'], $app->id);
         $this->assertEquals($data['name'], $app->name);
     }

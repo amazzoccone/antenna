@@ -19,7 +19,7 @@ class Notification extends Utility implements NotificationInterface
     {
         $this->append($parameters);
         $this->assertHasApp()->prepareForRequest();
-        $result = $this->requester->get('notifications', $this->parameters);
+        $result = $this->requester->get('notifications', $this->parameters)->responseContent();
         $this->assertHasNotErrors($result);
 
         return $result['notifications'];
@@ -36,7 +36,7 @@ class Notification extends Utility implements NotificationInterface
     {
         $this->append($data);
         $this->assertHasApp()->prepareForRequest();
-        $result = $this->requester->post('notifications', $this->parameters);
+        $result = $this->requester->post('notifications', $this->parameters)->responseContent();
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -52,7 +52,7 @@ class Notification extends Utility implements NotificationInterface
     public function find(string $id) : array
     {
         $this->assertHasApp()->prepareForRequest();
-        $result = $this->requester->get('notifications/'.$id, $this->parameters);
+        $result = $this->requester->get('notifications/'.$id, $this->parameters)->responseContent();
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -73,14 +73,13 @@ class Notification extends Utility implements NotificationInterface
      * Fore more information visit: https://documentation.onesignal.com/v4.0/reference#cancel-notification
      *
      * @param string $id
-     * @return bool
+     * @return bool (true if success)
      * @throws AntennaServerException
      */
     public function delete(string $id) : bool
     {
         $this->assertHasApp()->prepareForRequest();
-        $result = $this->requester->delete('notifications/'.$id, $this->parameters);
-        $this->assertHasNotErrors($result);
+        $this->requester->delete('notifications/'.$id, $this->parameters);
 
         return true;
     }

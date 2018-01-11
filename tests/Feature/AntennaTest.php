@@ -14,7 +14,7 @@ class AntennaTest extends TestCase
      */
     public function app_method_returns_the_default_config_app()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
@@ -28,7 +28,7 @@ class AntennaTest extends TestCase
      */
     public function app_method_returns_a_config_app()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
@@ -42,7 +42,7 @@ class AntennaTest extends TestCase
      */
     public function app_method_returns_a_custom_config_app()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
@@ -59,7 +59,7 @@ class AntennaTest extends TestCase
      */
     public function it_creates_an_app()
     {
-        $data = $this->fakeRequesterData();
+        $data = $this->fakeAppData();
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('post')->once()->andReturn($data);
 

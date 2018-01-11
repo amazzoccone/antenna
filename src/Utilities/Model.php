@@ -3,6 +3,7 @@
 namespace Bondacom\Antenna\Utilities;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
+use Bondacom\Antenna\Exceptions\AntennaNotFoundException;
 
 abstract class Model
 {
@@ -118,6 +119,10 @@ abstract class Model
      */
     private function findOrFail($id)
     {
+        if (empty($id)) {
+            throw new AntennaNotFoundException();
+        }
+
         $this->attributes['id'] = $id;
         $this->refresh();
 
