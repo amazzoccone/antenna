@@ -1,14 +1,15 @@
 <?php
 
-namespace Bondacom\Antenna\Tests;
+namespace Bondacom\Antenna\Tests\Unit;
 
-use Bondacom\Antenna\AntennaModel;
 use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
+use Bondacom\Antenna\Models\App;
+use Bondacom\Antenna\Tests\TestCase;
 
-class AntennaModelTest extends TestCase
+class AppTest extends TestCase
 {
     /**
      * @test
@@ -19,9 +20,9 @@ class AntennaModelTest extends TestCase
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
-        $app = AntennaModel::find(random_int(1, 9999), str_random());
+        $app = App::find(random_int(1, 9999), str_random());
 
-        $this->assertInstanceOf(AntennaModel::class, $app);
+        $this->assertInstanceOf(App::class, $app);
     }
 
     /**
@@ -34,11 +35,11 @@ class AntennaModelTest extends TestCase
         $mock->shouldReceive('get')->once()->andReturn($data);
         $mock->shouldReceive('put')->once()->andReturn($data);
 
-        $app = AntennaModel::find(random_int(1, 9999), str_random());
+        $app = App::find(random_int(1, 9999), str_random());
         $app->chrome_web_origin = 'https://example.com';
         $result = $app->save();
 
-        $this->assertInstanceOf(AntennaModel::class, $result);
+        $this->assertInstanceOf(App::class, $result);
     }
 
     /**
@@ -50,12 +51,12 @@ class AntennaModelTest extends TestCase
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('post')->once()->andReturn($data);
 
-        $app = AntennaModel::create([
+        $app = App::create([
             'name' => 'Testing One Signal Application',
             'chrome_web_origin' => 'https://example.com',
         ]);
 
-        $this->assertInstanceOf(AntennaModel::class, $app);
+        $this->assertInstanceOf(App::class, $app);
     }
 
     /**
@@ -64,7 +65,7 @@ class AntennaModelTest extends TestCase
     public function it_throws_an_exception_if_tries_to_create_an_app_but_not_have_required_fields()
     {
         $this->expectException(MissingOneSignalData::class);
-        AntennaModel::create([
+        App::create([
             'chrome_web_origin' => 'https://example.com',
         ]);
     }
@@ -83,7 +84,7 @@ class AntennaModelTest extends TestCase
             ]
         ]);
 
-        $app = AntennaModel::find(random_int(1, 9999), str_random());
+        $app = App::find(random_int(1, 9999), str_random());
         $app->gcm_key = 'dnudsijsd23';
 
         $this->expectException(AntennaServerException::class);
@@ -96,7 +97,7 @@ class AntennaModelTest extends TestCase
     public function it_throws_an_exception_if_driver_has_not_required_app_information()
     {
         $this->expectException(MissingOneSignalAppInformation::class);
-        AntennaModel::find('', '');
+        App::find('', '');
     }
 
     /**
@@ -108,7 +109,7 @@ class AntennaModelTest extends TestCase
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
-        $app = AntennaModel::find(random_int(1, 9999), str_random());
+        $app = App::find(random_int(1, 9999), str_random());
         $attributes = $app->getAttributes();
 
         $this->assertEquals($data, $attributes);
@@ -123,7 +124,7 @@ class AntennaModelTest extends TestCase
         $mock = $this->mock(Requester::class)->makePartial();
         $mock->shouldReceive('get')->once()->andReturn($data);
 
-        $app = AntennaModel::find(random_int(1, 9999), str_random());
+        $app = App::find(random_int(1, 9999), str_random());
         $this->assertEquals($data['id'], $app->id);
         $this->assertEquals($data['name'], $app->name);
     }

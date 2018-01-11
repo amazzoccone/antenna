@@ -1,10 +1,11 @@
 <?php
 
-namespace Bondacom\Antenna\Tests;
+namespace Bondacom\Antenna\Tests\Feature;
 
-use Bondacom\Antenna\AntennaModel;
 use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Bondacom\Antenna\Facades\Antenna;
+use Bondacom\Antenna\Models\App;
+use Bondacom\Antenna\Tests\TestCase;
 
 class AntennaTest extends TestCase
 {
@@ -19,7 +20,7 @@ class AntennaTest extends TestCase
 
         $app = Antenna::app();
 
-        $this->assertInstanceOf(AntennaModel::class, $app);
+        $this->assertInstanceOf(App::class, $app);
     }
 
     /**
@@ -33,7 +34,7 @@ class AntennaTest extends TestCase
 
         $app = Antenna::app('default');
 
-        $this->assertInstanceOf(AntennaModel::class, $app);
+        $this->assertInstanceOf(App::class, $app);
     }
 
     /**
@@ -50,7 +51,7 @@ class AntennaTest extends TestCase
             'key' => str_random()
         ]);
 
-        $this->assertInstanceOf(AntennaModel::class, $app);
+        $this->assertInstanceOf(App::class, $app);
     }
 
     /**
@@ -67,6 +68,6 @@ class AntennaTest extends TestCase
             'chrome_web_origin' => 'https://example.com',
         ]);
 
-        $this->assertInstanceOf(AntennaModel::class, $app);
+        $this->assertInstanceOf(App::class, $app);
     }
 }
