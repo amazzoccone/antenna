@@ -52,11 +52,20 @@ abstract class Utility
      */
     protected function assertHasNotErrors($result)
     {
-        if (array_key_exists('errors', $result)) {
+        if ($this->hasErrors($result)) {
             throw new AntennaServerException(implode(', ', $result['errors']));
         }
 
         return $this;
+    }
+
+    /**
+     * @param $result
+     * @return bool
+     */
+    protected function hasErrors($result)
+    {
+        return array_key_exists('errors', $result);
     }
 
     /**
@@ -65,5 +74,13 @@ abstract class Utility
     protected function notImplemented()
     {
         throw new AntennaMethodNotExistsException();
+    }
+
+    /**
+     * @return array
+     */
+    protected function result($response)
+    {
+        return json_decode($response->getBody()->getContents(), true);
     }
 }

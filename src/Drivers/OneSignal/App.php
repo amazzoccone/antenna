@@ -4,6 +4,7 @@ namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\AppInterface;
 use Bondacom\Antenna\Drivers\Utility;
+use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class App extends Utility implements AppInterface
@@ -26,10 +27,13 @@ class App extends Utility implements AppInterface
     public function create(array $data) : array
     {
         $this->assertDataCreation($data);
-        $result = $this->requester->post('apps', $data);
-        $this->assertHasNotErrors($result);
 
-        return $result;
+        $response = $this->requester->post('apps', $data)->response();
+        if ($response->getStatusCode() != '200') {
+            throw new AntennaServerException();
+        }
+
+        return $this->result($result);
     }
 
     /**
@@ -39,10 +43,12 @@ class App extends Utility implements AppInterface
      */
     public function find(string $id) : array
     {
-        $result = $this->requester->get('apps/'.$id);
-        $this->assertHasNotErrors($result);
+        $response = $this->requester->get('apps/'.$id)->response();
+        if ($response->getStatusCode() != '200') {
+            throw new AntennaServerException();
+        }
 
-        return $result;
+        return $this->result($result);
     }
 
     /**
@@ -53,7 +59,7 @@ class App extends Utility implements AppInterface
      */
     public function update(array $data, string $id) : array
     {
-        $result = $this->requester->put('apps/'.$id, $data);
+        $response = $this->requester->put('apps/'.$id, $data)->response();
         $this->assertHasNotErrors($result);
 
         return $result;

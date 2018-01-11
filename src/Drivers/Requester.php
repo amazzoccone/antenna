@@ -2,7 +2,7 @@
 
 namespace Bondacom\Antenna\Drivers;
 
-use Bondacom\Antenna\Exceptions\MissingUserKeyRequired;
+use Bondacom\Antenna\Exceptions\AuthorizationKeyIsEmptyException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -14,7 +14,7 @@ abstract class Requester
     abstract protected function url() : string;
 
     /**
-     * @var Client
+     * @var \GuzzleHttp\Client
      */
     protected $client;
 
@@ -22,6 +22,11 @@ abstract class Requester
      * @var array (json data, query params, headers, etc)
      */
     protected $options = [];
+
+    /**
+     * @var \GuzzleHttp\Psr7\Response
+     */
+    protected $response;
 
     /**
      * @var string
@@ -40,7 +45,7 @@ abstract class Requester
     /**
      * @param string $key
      * @return $this
-     * @throws MissingUserKeyRequired
+     * @throws AuthorizationKeyIsEmptyException
      */
     public function setAuthorizationKey($key)
     {
@@ -52,10 +57,11 @@ abstract class Requester
     /**
      * @param string $endpoint
      * @param $data
-     * @return array
+     * @return $this
      */
     public function post(string $endpoint, $data)
     {
+        $this->options = [];
         $this->options['headers']['Content-Type'] = 'application/json';
         $this->options['json'] = $data;
 
@@ -65,10 +71,11 @@ abstract class Requester
     /**
      * @param string $endpoint
      * @param $data
-     * @return array
+     * @return $this
      */
     public function put(string $endpoint, $data)
     {
+        $this->options = [];
         $this->options['Content-Type'] = 'application/json';
         $this->options['json'] = $data;
 
@@ -78,18 +85,27 @@ abstract class Requester
     /**
      * @param string $endpoint
      * @param array $parameters
-     * @return array
+     * @return $this
      */
     public function get(string $endpoint, array $parameters = [])
     {
+        $this->options = [];
         $this->options['query'] = $parameters;
         return $this->makeRequest($endpoint,'get');
     }
 
     /**
+     * @return \GuzzleHttp\Psr7\Response
+     */
+    public function response()
+    {
+        return $this->response;
+    }
+
+    /**
      * @param string $endpoint
      * @param string $method
-     * @return array
+     * @return $this
      */
     private function makeRequest(string $endpoint, string $method)
     {
@@ -97,31 +113,22 @@ abstract class Requester
         $uri = $this->url() . '/' . $endpoint;
 
         try {
-            $request = $this->client->request(strtoupper($method), $uri, $this->options);
-            return $this->processResponse($request);
+            $this->response = $this->client->request(strtoupper($method), $uri, $this->options);
         } catch (RequestException $e) {
-            return $this->processResponse($e->getResponse());
+            $this->response = $e->getResponse();
         }
+
+        return $this;
     }
 
     /**
-     * @param $request
-     * @return array
-     */
-    private function processResponse($request)
-    {
-        $this->options = [];
-        return json_decode($request->getBody()->getContents(), true);
-    }
-
-    /**
-     * @throws MissingUserKeyRequired
+     * @throws AuthorizationKeyIsEmptyException
      * @return $this
      */
     private function setAuthorizationHeader()
     {
         if (empty($this->key)) {
-            throw new MissingUserKeyRequired();
+            throw new AuthorizationKeyIsEmptyException();
         }
 
         $this->options['headers']['Authorization'] = 'Basic ' . $this->key;

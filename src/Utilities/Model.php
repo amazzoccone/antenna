@@ -24,7 +24,7 @@ abstract class Model
     protected $isDirty = false;
 
     /**
-     * AntennaModel constructor.
+     * Model constructor.
      *
      * @param array $attributes
      */
@@ -98,20 +98,25 @@ abstract class Model
 
     /**
      * @param $id
-     * @return AntennaModel
+     * @return Model|null
      * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     private function find($id)
     {
         $this->attributes['id'] = $id;
-        $this->refresh();
+
+        try{
+            $this->refresh();
+        } catch(\AntennaNotFoundException $e){
+            return null;
+        }
 
         return $this;
     }
 
     /**
      * @param array $data
-     * @return AntennaModel
+     * @return Model
      * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
     private function create(array $data)
@@ -200,6 +205,12 @@ abstract class Model
      */
     private function setAttribute($key, $value)
     {
+        //prevent id from being modified
+        if ($key == 'id') {
+            return $this;
+        }
+
+
         $this->attributes[$key] = $value;
         $this->isDirty = true;
 

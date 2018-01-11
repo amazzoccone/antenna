@@ -4,7 +4,6 @@ namespace Bondacom\Antenna\Drivers\OneSignal;
 
 use Bondacom\Antenna\Drivers\NotificationInterface;
 use Bondacom\Antenna\Drivers\Utility;
-use Bondacom\Antenna\Exceptions\MissingOneSignalAppInformation;
 use Bondacom\Antenna\Exceptions\MissingOneSignalData;
 
 class Notification extends Utility implements NotificationInterface
