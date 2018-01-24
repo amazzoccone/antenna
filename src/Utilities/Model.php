@@ -7,22 +7,12 @@ use Bondacom\Antenna\Exceptions\AntennaNotFoundException;
 
 abstract class Model
 {
-    /**
-     * @var array
-     */
-    protected $attributes = [];
+    use GuardsAttributes, HasAttributes;
 
     /**
      * @var DriverInterface
      */
     protected $driver;
-
-    /**
-     * Check if must go to the server to update it.
-     *
-     * @var bool
-     */
-    protected $isDirty = false;
 
     /**
      * Model constructor.
@@ -32,6 +22,7 @@ abstract class Model
     public function __construct(array $attributes = [])
     {
         $this->driver = $this->newDriverInstance();
+        $this->syncOriginal();
         $this->fill($attributes);
     }
 
@@ -152,23 +143,19 @@ abstract class Model
     }
 
     /**
-     * @return $this
+     * @return bool (true if success)
      * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
-    public function save()
+    private function save()
     {
-        if (!$this->isDirty) {
-            return $this;
+        if ($this->isDirty()) {
+            empty($this->attributes['id']) ?
+                $this->driver->create($this->attributes) :
+                $this->driver->update($this->attributes, $this->attributes['id']);
         }
 
-        $result = empty($this->attributes['id']) ?
-            $this->driver->create($this->attributes) :
-            $this->driver->update($this->attributes, $this->attributes['id']);
-
-        $this->fill($result);
-        $this->isDirty = false;
-
-        return $this;
+        $this->syncOriginal();
+        return true;
     }
 
     /**
@@ -177,70 +164,27 @@ abstract class Model
      * @return $this
      * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
-    public function refresh()
+    private function refresh()
     {
         $data = $this->driver->find($this->attributes['id']);
 
         $this->fill($data);
-        $this->isDirty = false;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * Get an attribute from the model.
-     *
-     * @param  string $key
-     * @return mixed
-     */
-    private function getAttribute($key)
-    {
-        if (!$key) {
-            return;
-        }
-
-        // If we have it we will return it
-        if (isset($this->attributes[$key])) {
-            return $this->attributes[$key];
-        }
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     * @return $this
-     */
-    private function setAttribute($key, $value)
-    {
-        //prevent id from being modified
-        if ($key == 'id') {
-            return $this;
-        }
-
-
-        $this->attributes[$key] = $value;
-        $this->isDirty = true;
 
         return $this;
     }
 
     /**
      *
-     * @param array $data
+     * @param array $attributes
      * @return $this
      */
-    private function fill($data)
+    private function fill(array $attributes)
     {
-        foreach ($data as $key => $value) {
-            $this->{$key} = $value;
+        foreach ($this->fillableFromArray($attributes) as $key => $value) {
+            // The developers may choose to place some attributes in the "fillable" array
+            // which means only those attributes may be set through mass assignment to
+            // the model, and all others will just get ignored for security reasons.
+            $this->setAttribute($key, $value);
         }
 
         return $this;

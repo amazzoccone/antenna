@@ -8,9 +8,24 @@ use Bondacom\Antenna\Utilities\Model;
 class Notification extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
-    protected $attributes = [];
+    protected $fillable = [
+        'id',
+        'successful',
+        'failed',
+        'converted',
+        'remaining',
+        'queued_at',
+        'send_after',
+        'url',
+        'data',
+        'canceled',
+        'headings',
+        'contents',
+    ];
 
     /**
      * @return \Bondacom\Antenna\Drivers\NotificationInterface
