@@ -59,6 +59,33 @@ abstract class Requester
 
     /**
      * @param string $endpoint
+     * @param array $data
+     * @return $this
+     */
+    public function delete(string $endpoint, $data)
+    {
+        $this->options = [];
+        $this->options['Content-Type'] = 'application/json';
+        $this->options['json'] = $data;
+
+        return $this->makeRequest($endpoint,'delete');
+    }
+
+    /**
+     * @param string $endpoint
+     * @param array $parameters
+     * @return $this
+     */
+    public function get(string $endpoint, array $parameters = [])
+    {
+        $this->options = [];
+        $this->options['query'] = $parameters;
+
+        return $this->makeRequest($endpoint,'get');
+    }
+
+    /**
+     * @param string $endpoint
      * @param $data
      * @return $this
      */
@@ -83,19 +110,6 @@ abstract class Requester
         $this->options['json'] = $data;
 
         return $this->makeRequest($endpoint,'put');
-    }
-
-    /**
-     * @param string $endpoint
-     * @param array $parameters
-     * @return $this
-     */
-    public function get(string $endpoint, array $parameters = [])
-    {
-        $this->options = [];
-        $this->options['query'] = $parameters;
-
-        return $this->makeRequest($endpoint,'get');
     }
 
     /**
