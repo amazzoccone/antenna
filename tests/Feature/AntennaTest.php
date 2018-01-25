@@ -6,6 +6,7 @@ use Bondacom\Antenna\Drivers\OneSignal\Requester;
 use Bondacom\Antenna\Facades\Antenna;
 use Bondacom\Antenna\Models\App;
 use Bondacom\Antenna\Tests\TestCase;
+use Illuminate\Support\Collection;
 
 class AntennaTest extends TestCase
 {
@@ -55,6 +56,22 @@ class AntennaTest extends TestCase
         ]);
 
         $this->assertInstanceOf(App::class, $app);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_all_apps()
+    {
+        $data = [$this->fakeAppData(), $this->fakeAppData(), $this->fakeAppData()];
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('get')->once()->andReturnSelf();
+        $mock->shouldReceive('responseContent')->once()->andReturn($data);
+
+        $apps = Antenna::apps();
+
+        $this->assertInstanceOf(Collection::class, $apps);
+        $this->assertEquals(3, $apps->count());
     }
 
     /**
