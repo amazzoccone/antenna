@@ -32,6 +32,14 @@ class Antenna
     }
 
     /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function apps()
+    {
+        return App::all();
+    }
+
+    /**
      * @param array $data
      * @return App
      */

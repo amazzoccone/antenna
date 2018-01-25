@@ -15,7 +15,11 @@ class App extends Utility implements AppInterface
      */
     public function all(array $parameters = []) : array
     {
-        $this->notImplemented();
+        $this->append($parameters);
+        $result = $this->requester->get('apps', $this->parameters)->responseContent();
+        $this->assertHasNotErrors($result);
+
+        return $result;
     }
 
     /**
