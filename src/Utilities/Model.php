@@ -86,16 +86,16 @@ abstract class Model
 
     /**
      * @param array $parameters
-     * @return array
+     * @return \Illuminate\Support\Collection
      * @throws \Bondacom\Antenna\Exceptions\AntennaServerException
      */
-    private function all(array $parameters = []) : array
+    private function all(array $parameters = []) : Collection
     {
         $data = $this->driver->all($parameters);
 
-        $models = [];
+        $models = collect();
         foreach ($data as $model) {
-            $models[] = (new static())->appendParameters($this->getParameters())->setAttributes($model, true);
+            $models->push((new static())->appendParameters($this->getParameters())->setAttributes($model, true));
         }
 
         return $models;
