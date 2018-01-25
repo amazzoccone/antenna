@@ -15,7 +15,7 @@ class NotificationTest extends TestCase
      */
     public function app_has_notifications_relation()
     {
-        $app = new App($this->fakeAppData());
+        $app = (new App())->setAttributes($this->fakeAppData());
 
         $this->assertInstanceOf(Builder::class, $app->notification());
     }
@@ -29,7 +29,7 @@ class NotificationTest extends TestCase
         $mock->shouldReceive('get')->once()->andReturnSelf();
         $mock->shouldReceive('responseContent')->once()->andReturn($this->fakeNotificationData());
 
-        $app = new App($this->fakeAppData());
+        $app = (new App())->setAttributes($this->fakeAppData());
         $notification = $app->notification()->find(str_random());
 
         $this->assertInstanceOf(Notification::class, $notification);

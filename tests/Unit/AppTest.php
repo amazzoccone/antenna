@@ -80,7 +80,7 @@ class AppTest extends TestCase
         $app->chrome_web_origin = 'https://example.com';
         $result = $app->save();
 
-        $this->assertInstanceOf(App::class, $result);
+        $this->assertTrue($result);
     }
 
     /**
