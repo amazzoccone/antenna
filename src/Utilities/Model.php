@@ -85,7 +85,14 @@ abstract class Model
      */
     private function all(array $parameters = []) : array
     {
-        return $this->driver->all($parameters);
+        $data = $this->driver->all($parameters);
+
+        $models = [];
+        foreach ($data as $model) {
+            $models[] = (new static())->setAttributes($data, true);
+        }
+
+        return $models;
     }
 
     /**
@@ -149,12 +156,12 @@ abstract class Model
     private function save()
     {
         if ($this->isDirty()) {
-            empty($this->attributes['id']) ?
+            $result = empty($this->attributes['id']) ?
                 $this->driver->create($this->attributes) :
                 $this->driver->update($this->attributes, $this->attributes['id']);
         }
 
-        $this->syncOriginal();
+        $this->setAttributes($result, true);
         return true;
     }
 
@@ -168,7 +175,7 @@ abstract class Model
     {
         $data = $this->driver->find($this->attributes['id']);
 
-        $this->fill($data);
+        $this->setAttributes($data, true);
 
         return $this;
     }
