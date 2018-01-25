@@ -4,6 +4,7 @@ namespace Bondacom\Antenna\Drivers;
 
 use Bondacom\Antenna\Exceptions\AntennaBadRequestException;
 use Bondacom\Antenna\Exceptions\AntennaNotFoundException;
+use Bondacom\Antenna\Exceptions\AntennaServerException;
 use Bondacom\Antenna\Exceptions\AuthorizationKeyIsEmptyException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -134,6 +135,7 @@ abstract class Requester
      * @return $this
      * @throws AntennaBadRequestException
      * @throws AntennaNotFoundException
+     * @throws AntennaServerException
      */
     private function makeRequest(string $endpoint, string $method)
     {
@@ -146,14 +148,20 @@ abstract class Requester
             $this->response = $e->getResponse();
         }
 
-        if($this->response->getStatusCode() == Response::HTTP_NOT_FOUND) {
-            throw new AntennaNotFoundException();
-        }
-        if($this->response->getStatusCode() == Response::HTTP_BAD_REQUEST) {
-            throw new AntennaBadRequestException();
+        if ($this->response->getStatusCode() == Response::HTTP_OK) {
+            return $this;
         }
 
-        return $this;
+        $errors = $this->responseContent()['errors'] ?? [];
+        $message = json_encode($errors);
+        if($this->response->getStatusCode() == Response::HTTP_NOT_FOUND) {
+            throw new AntennaNotFoundException($message);
+        }
+        if($this->response->getStatusCode() == Response::HTTP_BAD_REQUEST) {
+            throw new AntennaBadRequestException($message);
+        }
+
+        throw new AntennaServerException($message, $this->response->getStatusCode());
     }
 
     /**
