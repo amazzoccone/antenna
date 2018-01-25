@@ -42,7 +42,7 @@ class Builder
     public function __call($name, $arguments)
     {
         $model = new $this->class();
-        $model->append($this->parameters);
+        $model->appendParameters($this->parameters);
 
         return $model->{$name}(...$arguments);
     }

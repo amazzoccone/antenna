@@ -4,6 +4,7 @@ namespace Bondacom\Antenna\Utilities;
 
 use Bondacom\Antenna\Drivers\DriverInterface;
 use Bondacom\Antenna\Exceptions\AntennaNotFoundException;
+use Illuminate\Support\Collection;
 
 abstract class Model
 {
@@ -13,6 +14,11 @@ abstract class Model
      * @var DriverInterface
      */
     protected $driver;
+
+    /**
+     * @var array
+     */
+    private $parameters = [];
 
     /**
      * Model constructor.
@@ -89,7 +95,7 @@ abstract class Model
 
         $models = [];
         foreach ($data as $model) {
-            $models[] = (new static())->setAttributes($data, true);
+            $models[] = (new static())->appendParameters($this->getParameters())->setAttributes($model, true);
         }
 
         return $models;
@@ -210,10 +216,19 @@ abstract class Model
      * @param array $parameters
      * @return $this
      */
-    public function append(array $parameters)
+    public function appendParameters(array $parameters)
     {
+        $this->parameters = array_merge($this->parameters, $parameters);
         $this->driver->append($parameters);
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 }
