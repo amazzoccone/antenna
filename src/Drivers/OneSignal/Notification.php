@@ -18,8 +18,8 @@ class Notification extends Utility implements NotificationInterface
     public function all(array $parameters = []) : array
     {
         $this->append($parameters);
-        $this->assertHasApp()->prepareForRequest();
-        $result = $this->requester->get('notifications', $this->parameters)->responseContent();
+        $this->assertHasApp()->setAuthorizationKey();
+        $result = $this->requester->get('notifications', $this->getParamsForRequest())->responseContent();
         $this->assertHasNotErrors($result);
 
         return $result['notifications'];
@@ -35,8 +35,8 @@ class Notification extends Utility implements NotificationInterface
     public function create(array $data) : array
     {
         $this->append($data);
-        $this->assertHasApp()->prepareForRequest();
-        $result = $this->requester->post('notifications', $this->parameters)->responseContent();
+        $this->assertHasApp()->setAuthorizationKey();
+        $result = $this->requester->post('notifications', $this->getParamsForRequest())->responseContent();
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -51,8 +51,8 @@ class Notification extends Utility implements NotificationInterface
      */
     public function find(string $id) : array
     {
-        $this->assertHasApp()->prepareForRequest();
-        $result = $this->requester->get('notifications/'.$id, $this->parameters)->responseContent();
+        $this->assertHasApp()->setAuthorizationKey();
+        $result = $this->requester->get('notifications/'.$id, $this->getParamsForRequest())->responseContent();
         $this->assertHasNotErrors($result);
 
         return $result;
@@ -78,8 +78,8 @@ class Notification extends Utility implements NotificationInterface
      */
     public function delete(string $id) : bool
     {
-        $this->assertHasApp()->prepareForRequest();
-        $this->requester->delete('notifications/'.$id, $this->parameters);
+        $this->assertHasApp()->setAuthorizationKey();
+        $this->requester->delete('notifications/'.$id, $this->getParamsForRequest());
 
         return true;
     }
@@ -100,12 +100,22 @@ class Notification extends Utility implements NotificationInterface
     /**
      * @return $this
      */
-    private function prepareForRequest()
+    private function setAuthorizationKey()
     {
         $key = $this->parameters['app_key'];
-        unset($this->parameters['app_key']);
         $this->requester->setAuthorizationKey($key);
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    private function getParamsForRequest()
+    {
+        $parameters = $this->parameters;
+        unset($parameters['app_key']);
+
+        return $parameters;
     }
 }

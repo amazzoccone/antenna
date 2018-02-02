@@ -34,4 +34,21 @@ class NotificationTest extends TestCase
 
         $this->assertInstanceOf(Notification::class, $notification);
     }
+
+    /**
+     * @test
+     */
+    public function it_deletes_a_notification_from_an_app()
+    {
+        $mock = $this->mock(Requester::class)->makePartial();
+        $mock->shouldReceive('delete')->once()->andReturnSelf();
+
+        $notification = (new Notification())->setAttributes($this->fakeNotificationData());
+        $notification->appendParameters([
+            'app_id' => str_random(),
+            'app_key' => str_random(),
+        ]);
+
+        $notification->delete();
+    }
 }
