@@ -165,9 +165,10 @@ abstract class Model
             $result = empty($this->attributes['id']) ?
                 $this->driver->create($this->attributes) :
                 $this->driver->update($this->attributes, $this->attributes['id']);
+
+            $this->setAttributes($result, true);
         }
 
-        $this->setAttributes($result, true);
         return true;
     }
 
