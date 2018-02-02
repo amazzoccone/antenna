@@ -2,7 +2,9 @@
 
 namespace Bondacom\Antenna;
 
-class Antenna 
+use Bondacom\Antenna\Models\App;
+
+class Antenna
 {
     /**
      * @var array
@@ -20,22 +22,30 @@ class Antenna
 
     /**
      * @param string|array $config
-     * @return AntennaModel
+     * @return App
      */
     public function app($config = null)
     {
         $creds = $this->config($config);
 
-        return AntennaModel::find($creds['id'], $creds['key']);
+        return App::find($creds['id']);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function apps()
+    {
+        return App::all();
     }
 
     /**
      * @param array $data
-     * @return SignalApp
+     * @return App
      */
     public function create(array $data)
     {
-        return AntennaModel::create($data);
+        return App::create($data);
     }
 
     /**

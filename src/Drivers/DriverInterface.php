@@ -5,19 +5,18 @@ namespace Bondacom\Antenna\Drivers;
 interface DriverInterface
 {
     /**
-     * @param $data
-     * @return array
+     * DriverInterface constructor.
+     * @param string $key
      */
-    public function create($data);
+    public function __construct(string $key);
 
     /**
-     * @return array
+     * @return \Bondacom\Antenna\Drivers\AppInterface
      */
-    public function get();
+    public function app() : AppInterface;
 
     /**
-     * @param $data
-     * @return array
+     * @return \Bondacom\Antenna\Drivers\NotificationInterface
      */
-    public function update($data);
+    public function notification() : NotificationInterface;
 }

@@ -39,9 +39,7 @@ class AntennaServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(DriverInterface::class, function ($app) use ($config) {
-            $consumer = app(Driver::class);
-            $consumer->setUserKey($config['userKey']);
-            return $consumer;
+            return new Driver($config['userKey']);
         });
     }
 }

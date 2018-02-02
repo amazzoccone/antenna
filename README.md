@@ -70,6 +70,12 @@ $app = Antenna::app([
 ]);
 ```
 
+**Example** - Get all apps
+
+```
+$apps = Antenna::apps();
+```
+
 **Example** - Update an app
 
 ```
@@ -77,6 +83,43 @@ $app = Antenna::app();
 $app->name = 'New Name';
 $app->save();
 ```
+
+**Example** - Create a notification from an app
+
+```
+$app = Antenna::app();
+$notification = $app->notification()->create([
+    "included_segments" => [
+        "All",
+    ],
+    "contents" => [
+        "es" => "Spanish Message",
+        "en" => "English message",
+    ],
+]);
+```
+
+**Example** - Find a notification from an app
+
+```
+$app = Antenna::app();
+$notification = $app->notification()->find({yourId});
+```
+
+**Example** - Get all notifications from an app
+
+```
+$notifications = Antenna::apps()->notification()->all();
+```
+
+**Example** - Cancel a notification from an app
+
+```
+$app = Antenna::app();
+$notification = $app->notification()->find({yourId});
+$notification->delete();
+```
+
 
 ## Contributing to Antenna
 

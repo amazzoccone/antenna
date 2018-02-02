@@ -4,7 +4,7 @@ namespace Bondacom\Antenna\Exceptions;
 
 use Throwable;
 
-class AntennaSaveException extends AntennaException
+class AntennaMethodNotExistsException extends AntennaException
 {
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {

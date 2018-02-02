@@ -35,9 +35,23 @@ abstract class TestCase extends BaseTestCase
      * @param array $data
      * @return array
      */
-    protected function fakeRequesterData(array $data = [])
+    protected function fakeAppData(array $data = [])
     {
-        $id = random_int(1, 9999);
+        $id = str_random();
+        $name = 'Testing';
+        $basic_auth_key = str_random();
+        $fakeData = compact('id', 'name', 'basic_auth_key');
+
+        return array_merge($fakeData, $data);
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function fakeNotificationData(array $data = [])
+    {
+        $id = str_random();
         $name = 'Testing';
         $basic_auth_key = str_random();
         $fakeData = compact('id', 'name', 'basic_auth_key');
