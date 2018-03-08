@@ -1,6 +1,8 @@
 {
   "name": "bondacom/antenna",
-  "description": "Laravel Wrapper to OneSignal REST API.",
+  "description": "Laravel Wrapper of OneSignal REST API.",
+  "license": "MIT",
+  "keywords": ["antenna", "push", "notification"],
   "require": {
     "php": "^7.1",
     "guzzlehttp/guzzle": "^6.3"
