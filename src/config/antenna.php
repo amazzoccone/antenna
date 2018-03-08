@@ -1,14 +1,4 @@
 <?php
-
-/*
-|--------------------------------------------------------------------------
-| Antenna ~ One Signal Wrapper for Laravel
-|--------------------------------------------------------------------------
-| Client configuration
-|
-| You can find more information in (https://github.com/bondacom/Antenna)
-*/
-
 return [
     /*
     |--------------------------------------------------------------------------

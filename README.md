@@ -2,7 +2,7 @@
 
 ###### [FAQ](#faq) | [Contributing](https://github.com/bondacom/Antenna/blob/master/CONTRIBUTING.md)
 
-> Antenna is a Laravel library which provides high-level functionalities to control [OneSignal](https://onesignal.com).
+> Antenna is a [Bondacom](https://bondacom.com) library which provides high-level functionalities to control [OneSignal](https://onesignal.com).
 
 ###### What can I do?
 
@@ -16,17 +16,17 @@ Most things that you can do manually from the One Signal Panel can be done using
 
 ### Installation
 
-> *Note: Antenna requires at least PHP v5.6.*
+> *Note: Antenna requires at least PHP v7.1.*
 
 To use Antenna in your Laravel project, run:
 ```
-composer require Bondacom/Antenna
+composer require bondacom/antenna
 ```
 
-> **Note**: For Laravel less than 5.5 remember to register manually the service provider!
+> **Note**: For Lumen or Laravel less than 5.5remember to register manually the service provider!
 
 ### Configuration
-Copy the config file into your project by running
+Copy the config file into your project. For Laravel projects run:
 ```
 php artisan vendor:publish --provider="Bondacom\Antenna\Providers\AntennaServiceProvider"
 ```
@@ -125,10 +125,14 @@ $notification->delete();
 
 Check out [contributing guide](https://github.com/bondacom/Antenna/blob/master/CONTRIBUTING.md) to get an overview of Antenna development.
 
-# FAQ
+## FAQ
 
 #### Q: Which PHP and Laravel version does Antenna use?
 
 Look for [composer.json](https://github.com/bondacom/Antenna/blob/master/composer.json).
 
 As PHP, Laravel and One Signal improve over time, Antenna will be updated to depend on newer versions.
+
+## License
+
+Antenna is an open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
