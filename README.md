@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/bondacom/antenna.svg?branch=master)](https://travis-ci.org/bondacom/antenna)
+[![Latest Stable Version](https://poser.pugx.org/bondacom/antenna/v/stable)](https://packagist.org/packages/bondacom/antenna)
+[![Total Downloads](https://poser.pugx.org/bondacom/antenna/downloads)](https://packagist.org/packages/bondacom/antenna)
+[![License](https://poser.pugx.org/bondacom/antenna/license)](https://packagist.org/packages/bondacom/antenna)
+
 # Antenna
 
 ###### [FAQ](#faq) | [Contributing](https://github.com/bondacom/Antenna/blob/master/CONTRIBUTING.md)
